@@ -1,44 +1,62 @@
-
 import 'package:editor_widgets/dock_element.dart';
 import 'package:editor_widgets/dock_side.dart';
 import 'package:editor_widgets/dock_toolbar.dart';
 import 'package:flutter/material.dart';
 
+/// DockLayout widget
 class DockLayout extends StatefulWidget {
-
+  /// child widget.
   final Widget? child;
-  final List<DockElement> tools;
+
+  /// list of available dock elements.
+  final List<DockElement> elements;
+
+  /// enable/disable left pane.
   final bool leftPane;
+
+  /// enable/disable top pane.
   final bool topPane;
+
+  /// enable/disable right pane.
   final bool rightPane;
+
+  /// enable/disable bottom pane.
   final bool bottomPane;
+
+  /// left toolbar definition.
   final DockToolbar leftPaneToolbar;
+
+  /// top toolbar definition.
   final DockToolbar topPaneToolbar;
+
+  /// right toolbar definition.
   final DockToolbar rightPaneToolbar;
+
+  /// bottom toolbar definition.
   final DockToolbar bottomPaneToolbar;
 
-  const DockLayout({super.key,
-    this.child,
-    this.tools=const [],
-    this.leftPane=true,
-    this.topPane=true,
-    this.rightPane=true,
-    this.bottomPane=true,
-    this.leftPaneToolbar=const DockToolbar(),
-    this.topPaneToolbar=const DockToolbar(),
-    this.rightPaneToolbar=const DockToolbar(),
-    this.bottomPaneToolbar=const DockToolbar()
-  });
+  /// default constructor.
+  const DockLayout(
+      {super.key,
+      this.child,
+      this.elements = const [],
+      this.leftPane = true,
+      this.topPane = true,
+      this.rightPane = true,
+      this.bottomPane = true,
+      this.leftPaneToolbar = const DockToolbar(),
+      this.topPaneToolbar = const DockToolbar(),
+      this.rightPaneToolbar = const DockToolbar(),
+      this.bottomPaneToolbar = const DockToolbar()});
 
   @override
   State<StatefulWidget> createState() {
     return DockLayoutState();
   }
-
 }
 
+/// DockLayout state implementation.
 class DockLayoutState extends State<DockLayout> {
-
   late List<DockElement> _leftTopPaneTools;
   late List<DockElement> _leftBottomPaneTools;
   late List<DockElement> _topLeftPaneTools;
@@ -76,7 +94,7 @@ class DockLayoutState extends State<DockLayout> {
   double _bottomRightPaneDragOpacity = 0.0;
 
   static const double _minimumPaneSize = 60;
-  late Map<DockElement,double> _paneOpacityButtons;
+  late Map<DockElement, double> _paneOpacityButtons;
   //bool _dragging = false;
   late Offset _dragPosition;
 
@@ -87,8 +105,8 @@ class DockLayoutState extends State<DockLayout> {
     updatePanes();
   }
 
+  /// recalculate pane sizes
   void updatePanes() {
-
     _paneOpacityButtons = {};
 
     _leftTopPaneTools = [];
@@ -115,54 +133,70 @@ class DockLayoutState extends State<DockLayout> {
     _bottomRightPaneToolsIndex = -1;
     _bottomPaneSize = 300;
 
-    for (DockElement element in widget.tools) {
+    for (DockElement element in widget.elements) {
       switch (element.preferredDockSide) {
         case DockSide.leftTop:
           _leftTopPaneTools.add(element);
-          if (element.visible && widget.leftPane  && _leftTopPaneToolsIndex == -1) {
-            _leftTopPaneToolsIndex = _leftTopPaneTools.length-1;
+          if (element.visible &&
+              widget.leftPane &&
+              _leftTopPaneToolsIndex == -1) {
+            _leftTopPaneToolsIndex = _leftTopPaneTools.length - 1;
           }
           break;
         case DockSide.leftBottom:
           _leftBottomPaneTools.add(element);
-          if (element.visible && widget.leftPane && _leftBottomPaneToolsIndex == -1) {
-            _leftBottomPaneToolsIndex = _leftBottomPaneTools.length-1;
+          if (element.visible &&
+              widget.leftPane &&
+              _leftBottomPaneToolsIndex == -1) {
+            _leftBottomPaneToolsIndex = _leftBottomPaneTools.length - 1;
           }
           break;
         case DockSide.topLeft:
           _topLeftPaneTools.add(element);
-          if (element.visible && widget.topPane && _topLeftPaneToolsIndex == -1) {
-            _topLeftPaneToolsIndex = _topLeftPaneTools.length-1;
+          if (element.visible &&
+              widget.topPane &&
+              _topLeftPaneToolsIndex == -1) {
+            _topLeftPaneToolsIndex = _topLeftPaneTools.length - 1;
           }
           break;
         case DockSide.topRight:
           _topRightPaneTools.add(element);
-          if (element.visible && widget.topPane && _topRightPaneToolsIndex == -1) {
-            _topRightPaneToolsIndex = _topRightPaneTools.length-1;
+          if (element.visible &&
+              widget.topPane &&
+              _topRightPaneToolsIndex == -1) {
+            _topRightPaneToolsIndex = _topRightPaneTools.length - 1;
           }
           break;
         case DockSide.rightTop:
           _rightTopPaneTools.add(element);
-          if (element.visible && widget.rightPane && _rightTopPaneToolsIndex == -1) {
-            _rightTopPaneToolsIndex = _rightTopPaneTools.length-1;
+          if (element.visible &&
+              widget.rightPane &&
+              _rightTopPaneToolsIndex == -1) {
+            _rightTopPaneToolsIndex = _rightTopPaneTools.length - 1;
           }
           break;
         case DockSide.rightBottom:
           _rightBottomPaneTools.add(element);
-          if (element.visible && widget.rightPane && _rightBottomPaneToolsIndex == -1) {
-            _rightBottomPaneToolsIndex = _rightBottomPaneTools.length-1;
+          if (element.visible &&
+              widget.rightPane &&
+              _rightBottomPaneToolsIndex == -1) {
+            _rightBottomPaneToolsIndex = _rightBottomPaneTools.length - 1;
           }
           break;
         case DockSide.bottomLeft:
           _bottomLeftPaneTools.add(element);
-          if (element.visible && widget.bottomPane && _bottomLeftPaneToolsIndex == -1) {
-            _bottomLeftPaneToolsIndex = _bottomLeftPaneTools.length-1;
+          if (element.visible &&
+              widget.bottomPane &&
+              _bottomLeftPaneToolsIndex == -1) {
+            _bottomLeftPaneToolsIndex = _bottomLeftPaneTools.length - 1;
           }
           break;
         case DockSide.bottomRight:
           _bottomRightPaneTools.add(element);
-          if (element.visible && widget.bottomPane && _bottomRightPaneToolsIndex == -1) {
-            _bottomRightPaneToolsIndex = _bottomRightPaneTools.length-1;
+          if (element.visible &&
+              widget.bottomPane &&
+              _bottomRightPaneToolsIndex == -1) {
+            _bottomRightPaneToolsIndex = _bottomRightPaneTools.length - 1;
           }
           break;
       }
@@ -171,362 +205,449 @@ class DockLayoutState extends State<DockLayout> {
 
   @override
   Widget build(BuildContext context) {
+    return LayoutBuilder(builder: (context, constraints) {
+      // update semi pane sizes
+      if (_leftTopPaneSize == null) {
+        double topSize =
+            (_topLeftPaneToolsIndex != -1 || _topRightPaneToolsIndex != -1)
+                ? _topPaneSize
+                : 0;
+        double bottomSize = (_bottomLeftPaneToolsIndex != -1 ||
+                _bottomRightPaneToolsIndex != -1)
+            ? _bottomPaneSize
+            : 0;
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-
-        // update semi pane sizes
-        if (_leftTopPaneSize == null) {
-
-          double topSize = (_topLeftPaneToolsIndex != -1 || _topRightPaneToolsIndex != -1) ? _topPaneSize : 0;
-          double bottomSize = (_bottomLeftPaneToolsIndex != -1 || _bottomRightPaneToolsIndex != -1) ? _bottomPaneSize : 0;
-
-          _leftTopPaneSize = (constraints.maxHeight - topSize - bottomSize) / 2;
-          if (_leftTopPaneSize! < 0) {
-            _leftTopPaneSize = 0;
-          }
-          _rightTopPaneSize = _leftTopPaneSize;
-
-          _topLeftPaneSize = (constraints.maxWidth) / 2;
-          _bottomLeftPaneSize = (constraints.maxWidth) / 2;
-
+        _leftTopPaneSize = (constraints.maxHeight - topSize - bottomSize) / 2;
+        if (_leftTopPaneSize! < 0) {
+          _leftTopPaneSize = 0;
         }
+        _rightTopPaneSize = _leftTopPaneSize;
 
-        Widget? topPaneToolbar = _getToolbar(widget.topPaneToolbar, Axis.horizontal);
-        Widget? bottomPaneToolbar = _getToolbar(widget.bottomPaneToolbar, Axis.horizontal);
-        Widget? leftPaneToolbar = _getToolbar(widget.leftPaneToolbar, Axis.vertical);
-        Widget? rightPaneToolbar = _getToolbar(widget.rightPaneToolbar, Axis.vertical);
+        _topLeftPaneSize = (constraints.maxWidth) / 2;
+        _bottomLeftPaneSize = (constraints.maxWidth) / 2;
+      }
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            if (topPaneToolbar != null)
-              Container(
-                decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey.shade300))),
-                child: topPaneToolbar
-              ),
-            Expanded(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  if (leftPaneToolbar != null)
-                    Container(
-                      decoration: BoxDecoration(border: Border(right: BorderSide(color: Colors.grey.shade300))),
-                      child: leftPaneToolbar
-                    ),
-                  Expanded(
-                    child: DragTarget<DockElement>(
-                      builder: (BuildContext context, List<DockElement?> candidateData, List<dynamic> rejectedData) {
+      Widget? topPaneToolbar =
+          _getToolbar(widget.topPaneToolbar, Axis.horizontal);
+      Widget? bottomPaneToolbar =
+          _getToolbar(widget.bottomPaneToolbar, Axis.horizontal);
+      Widget? leftPaneToolbar =
+          _getToolbar(widget.leftPaneToolbar, Axis.vertical);
+      Widget? rightPaneToolbar =
+          _getToolbar(widget.rightPaneToolbar, Axis.vertical);
 
-                        List<Widget> stackElements = [
-                          Column(
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              if (_topLeftPaneToolsIndex != -1 || _topRightPaneToolsIndex != -1)
-                                SizedBox(height: _topPaneSize, child: _getTopPane()),
-                              if (_topLeftPaneToolsIndex != -1 || _topRightPaneToolsIndex != -1)
-                                MouseRegion(
-                                  cursor: SystemMouseCursors.resizeRow,
-                                  child: GestureDetector(
-                                    behavior: HitTestBehavior.translucent,
-                                    onPanUpdate: (details) {
-                                      _topPaneSize += details.delta.dy;
-                                      if (_topPaneSize<_minimumPaneSize) {
-                                        _topPaneSize = _minimumPaneSize;
-                                      }
-                                      setState(() {});
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(top: 3.0, bottom: 3.0),
-                                      child: Container(height: 1, color: Colors.grey.shade300,),
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (topPaneToolbar != null)
+            Container(
+                decoration: BoxDecoration(
+                    border: Border(
+                        bottom: BorderSide(color: Colors.grey.shade300))),
+                child: topPaneToolbar),
+          Expanded(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (leftPaneToolbar != null)
+                  Container(
+                      decoration: BoxDecoration(
+                          border: Border(
+                              right: BorderSide(color: Colors.grey.shade300))),
+                      child: leftPaneToolbar),
+                Expanded(
+                  child: DragTarget<DockElement>(
+                    builder: (BuildContext context,
+                        List<DockElement?> candidateData,
+                        List<dynamic> rejectedData) {
+                      List<Widget> stackElements = [
+                        Column(
+                          mainAxisSize: MainAxisSize.max,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            if (_topLeftPaneToolsIndex != -1 ||
+                                _topRightPaneToolsIndex != -1)
+                              SizedBox(
+                                  height: _topPaneSize, child: _getTopPane()),
+                            if (_topLeftPaneToolsIndex != -1 ||
+                                _topRightPaneToolsIndex != -1)
+                              MouseRegion(
+                                cursor: SystemMouseCursors.resizeRow,
+                                child: GestureDetector(
+                                  behavior: HitTestBehavior.translucent,
+                                  onPanUpdate: (details) {
+                                    _topPaneSize += details.delta.dy;
+                                    if (_topPaneSize < _minimumPaneSize) {
+                                      _topPaneSize = _minimumPaneSize;
+                                    }
+                                    setState(() {});
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 3.0, bottom: 3.0),
+                                    child: Container(
+                                      height: 1,
+                                      color: Colors.grey.shade300,
                                     ),
                                   ),
                                 ),
-
-                              Expanded( child: Row(
+                              ),
+                            Expanded(
+                              child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  if (_leftTopPaneToolsIndex != -1 || _leftBottomPaneToolsIndex != -1)
-                                    SizedBox(width: _leftPaneSize, child: _getLeftPane()),
-                                  if (_leftTopPaneToolsIndex != -1 || _leftBottomPaneToolsIndex != -1)
+                                  if (_leftTopPaneToolsIndex != -1 ||
+                                      _leftBottomPaneToolsIndex != -1)
+                                    SizedBox(
+                                        width: _leftPaneSize,
+                                        child: _getLeftPane()),
+                                  if (_leftTopPaneToolsIndex != -1 ||
+                                      _leftBottomPaneToolsIndex != -1)
                                     MouseRegion(
                                       cursor: SystemMouseCursors.resizeColumn,
                                       child: GestureDetector(
                                         behavior: HitTestBehavior.translucent,
                                         onPanUpdate: (details) {
                                           _leftPaneSize += details.delta.dx;
-                                          if (_leftPaneSize<_minimumPaneSize) {
+                                          if (_leftPaneSize <
+                                              _minimumPaneSize) {
                                             _leftPaneSize = _minimumPaneSize;
                                           }
                                           setState(() {});
                                         },
                                         child: Padding(
-                                          padding: const EdgeInsets.only(left: 3.0, right: 3.0),
-                                          child: Container(width: 1, color: Colors.grey.shade300,),
+                                          padding: const EdgeInsets.only(
+                                              left: 3.0, right: 3.0),
+                                          child: Container(
+                                            width: 1,
+                                            color: Colors.grey.shade300,
+                                          ),
                                         ),
                                       ),
                                     ),
 
                                   // main container
-                                  Expanded( child: widget.child ?? const Center(child: Text('Empty container'),),),
+                                  Expanded(
+                                    child: widget.child ??
+                                        const Center(
+                                          child: Text('Empty container'),
+                                        ),
+                                  ),
 
-                                  if (_rightTopPaneToolsIndex != -1 || _rightBottomPaneToolsIndex != -1)
+                                  if (_rightTopPaneToolsIndex != -1 ||
+                                      _rightBottomPaneToolsIndex != -1)
                                     MouseRegion(
                                       cursor: SystemMouseCursors.resizeColumn,
                                       child: GestureDetector(
                                         behavior: HitTestBehavior.translucent,
                                         onPanUpdate: (details) {
                                           _rightPaneSize -= details.delta.dx;
-                                          if (_rightPaneSize<_minimumPaneSize) {
+                                          if (_rightPaneSize <
+                                              _minimumPaneSize) {
                                             _rightPaneSize = _minimumPaneSize;
                                           }
                                           setState(() {});
                                         },
                                         child: Padding(
-                                          padding: const EdgeInsets.only(left: 3.0, right: 3.0),
-                                          child: Container(width: 1, color: Colors.grey.shade300,),
+                                          padding: const EdgeInsets.only(
+                                              left: 3.0, right: 3.0),
+                                          child: Container(
+                                            width: 1,
+                                            color: Colors.grey.shade300,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  if (_rightTopPaneToolsIndex != -1 || _rightBottomPaneToolsIndex != -1)
-                                    SizedBox(width: _rightPaneSize, child: _getRightPane()),
+                                  if (_rightTopPaneToolsIndex != -1 ||
+                                      _rightBottomPaneToolsIndex != -1)
+                                    SizedBox(
+                                        width: _rightPaneSize,
+                                        child: _getRightPane()),
                                 ],
-                              ),),
-
-                              if (_bottomLeftPaneToolsIndex != -1 || _bottomRightPaneToolsIndex != -1)
-                                MouseRegion(
-                                  cursor: SystemMouseCursors.resizeRow,
-                                  child: GestureDetector(
-                                    behavior: HitTestBehavior.translucent,
-                                    onPanUpdate: (details) {
-                                      _bottomPaneSize -= details.delta.dy;
-                                      if (_bottomPaneSize<_minimumPaneSize) {
-                                        _bottomPaneSize = _minimumPaneSize;
-                                      }
-                                      setState(() {});
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(top: 3.0, bottom: 3.0),
-                                      child: Container(height: 1, color: Colors.grey.shade300,),
+                              ),
+                            ),
+                            if (_bottomLeftPaneToolsIndex != -1 ||
+                                _bottomRightPaneToolsIndex != -1)
+                              MouseRegion(
+                                cursor: SystemMouseCursors.resizeRow,
+                                child: GestureDetector(
+                                  behavior: HitTestBehavior.translucent,
+                                  onPanUpdate: (details) {
+                                    _bottomPaneSize -= details.delta.dy;
+                                    if (_bottomPaneSize < _minimumPaneSize) {
+                                      _bottomPaneSize = _minimumPaneSize;
+                                    }
+                                    setState(() {});
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 3.0, bottom: 3.0),
+                                    child: Container(
+                                      height: 1,
+                                      color: Colors.grey.shade300,
                                     ),
                                   ),
                                 ),
-                              if (_bottomLeftPaneToolsIndex != -1)
-                                SizedBox(height: _bottomPaneSize, child: _getBottomPane()),
-                            ],
-                          ),
-                        ];
-                        if (candidateData.isNotEmpty) {
-
-                          if (widget.topPane) {
-                            stackElements.add(AnimatedOpacity(
-                                opacity: _topLeftPaneDragOpacity,
-                                duration: const Duration(milliseconds: 200),
-                                child: Container(width: constraints.maxWidth/2, height: constraints.maxHeight/5, color: Colors.grey.withOpacity(0.5),))
-                            );
-                            stackElements.add(AnimatedOpacity(
-                              opacity: _topRightPaneDragOpacity,
-                              duration: const Duration(milliseconds: 200),
-                              child: Align(
-                                  alignment: Alignment.topRight,
-                                  child: Container(width: constraints.maxWidth/2, height: constraints.maxHeight/5, color: Colors.grey.withOpacity(0.5),)
                               ),
-                            ));
+                            if (_bottomLeftPaneToolsIndex != -1)
+                              SizedBox(
+                                  height: _bottomPaneSize,
+                                  child: _getBottomPane()),
+                          ],
+                        ),
+                      ];
+                      if (candidateData.isNotEmpty) {
+                        if (widget.topPane) {
+                          stackElements.add(AnimatedOpacity(
+                              opacity: _topLeftPaneDragOpacity,
+                              duration: const Duration(milliseconds: 200),
+                              child: Container(
+                                width: constraints.maxWidth / 2,
+                                height: constraints.maxHeight / 5,
+                                color: Colors.grey.withOpacity(0.5),
+                              )));
+                          stackElements.add(AnimatedOpacity(
+                            opacity: _topRightPaneDragOpacity,
+                            duration: const Duration(milliseconds: 200),
+                            child: Align(
+                                alignment: Alignment.topRight,
+                                child: Container(
+                                  width: constraints.maxWidth / 2,
+                                  height: constraints.maxHeight / 5,
+                                  color: Colors.grey.withOpacity(0.5),
+                                )),
+                          ));
+                        }
+                        if (widget.bottomPane) {
+                          stackElements.add(AnimatedOpacity(
+                            opacity: _bottomLeftPaneDragOpacity,
+                            duration: const Duration(milliseconds: 200),
+                            child: Align(
+                                alignment: Alignment.bottomLeft,
+                                child: Container(
+                                  width: constraints.maxWidth / 2,
+                                  height: constraints.maxHeight / 5,
+                                  color: Colors.grey.withOpacity(0.5),
+                                )),
+                          ));
+                          stackElements.add(AnimatedOpacity(
+                            opacity: _bottomRightPaneDragOpacity,
+                            duration: const Duration(milliseconds: 200),
+                            child: Align(
+                                alignment: Alignment.bottomRight,
+                                child: Container(
+                                  width: constraints.maxWidth / 2,
+                                  height: constraints.maxHeight / 5,
+                                  color: Colors.grey.withOpacity(0.5),
+                                )),
+                          ));
+                        }
+                        if (widget.leftPane) {
+                          double height = constraints.maxHeight;
+                          double leftTopPadding = 0;
+                          double leftBottomPadding = 0;
+                          if (widget.topPane) {
+                            height -= constraints.maxHeight / 5;
+                            leftTopPadding = constraints.maxHeight / 5;
                           }
                           if (widget.bottomPane) {
-                            stackElements.add(AnimatedOpacity(
-                              opacity: _bottomLeftPaneDragOpacity,
-                              duration: const Duration(milliseconds: 200),
-                              child: Align(
-                                  alignment: Alignment.bottomLeft,
-                                  child: Container(width: constraints.maxWidth/2, height: constraints.maxHeight/5, color: Colors.grey.withOpacity(0.5),)
-                              ),
-                            ));
-                            stackElements.add(AnimatedOpacity(
-                              opacity: _bottomRightPaneDragOpacity,
-                              duration: const Duration(milliseconds: 200),
-                              child: Align(
-                                  alignment: Alignment.bottomRight,
-                                  child: Container(width: constraints.maxWidth/2, height: constraints.maxHeight/5, color: Colors.grey.withOpacity(0.5),)
-                              ),
-                            ));
+                            height -= constraints.maxHeight / 5;
+                            leftBottomPadding = constraints.maxHeight / 5;
                           }
-                          if (widget.leftPane) {
-                            double height = constraints.maxHeight;
-                            double leftTopPadding = 0;
-                            double leftBottomPadding = 0;
-                            if (widget.topPane) {
-                              height -= constraints.maxHeight/5;
-                              leftTopPadding = constraints.maxHeight/5;
-                            }
-                            if (widget.bottomPane) {
-                              height -= constraints.maxHeight/5;
-                              leftBottomPadding = constraints.maxHeight/5;
-                            }
-                            stackElements.add(AnimatedOpacity(
-                              opacity: _leftTopPaneDragOpacity,
-                              duration: const Duration(milliseconds: 200),
-                              child: Padding(
-                                padding: EdgeInsets.only(top: leftTopPadding),
-                                child: Container(width: constraints.maxWidth/5, height: height/2.0, color: Colors.grey.withOpacity(0.5),),
+                          stackElements.add(AnimatedOpacity(
+                            opacity: _leftTopPaneDragOpacity,
+                            duration: const Duration(milliseconds: 200),
+                            child: Padding(
+                              padding: EdgeInsets.only(top: leftTopPadding),
+                              child: Container(
+                                width: constraints.maxWidth / 5,
+                                height: height / 2.0,
+                                color: Colors.grey.withOpacity(0.5),
                               ),
-                            ));
-                            stackElements.add(AnimatedOpacity(
-                              opacity: _leftBottomPaneDragOpacity,
-                              duration: const Duration(milliseconds: 200),
-                              child: Align(
-                                  alignment: Alignment.bottomLeft,
-                                  child: Padding(
-                                    padding: EdgeInsets.only(bottom: leftBottomPadding),
-                                    child: Container(width: constraints.maxWidth/5, height: height/2.0, color: Colors.grey.withOpacity(0.5),),
-                                  )
-                              ),
-                            ));
-                          }
-                          if (widget.rightPane) {
-                            double height = constraints.maxHeight;
-                            double rightTopPadding = 0;
-                            double rightBottomPadding = 0;
-                            if (widget.topPane) {
-                              height -= constraints.maxHeight/5;
-                              rightTopPadding = constraints.maxHeight/5;
-                            }
-                            if (widget.bottomPane) {
-                              height -= constraints.maxHeight/5;
-                              rightBottomPadding = constraints.maxHeight/5;
-                            }
-
-                            stackElements.add(AnimatedOpacity(
-                              opacity: _rightTopPaneDragOpacity,
-                              duration: const Duration(milliseconds: 200),
-                              child: Align(
-                                alignment: Alignment.topRight,
+                            ),
+                          ));
+                          stackElements.add(AnimatedOpacity(
+                            opacity: _leftBottomPaneDragOpacity,
+                            duration: const Duration(milliseconds: 200),
+                            child: Align(
+                                alignment: Alignment.bottomLeft,
                                 child: Padding(
-                                  padding: EdgeInsets.only(top: rightTopPadding),
-                                  child: Container(width: constraints.maxWidth/5, height: height/2.0, color: Colors.grey.withOpacity(0.5),),
+                                  padding: EdgeInsets.only(
+                                      bottom: leftBottomPadding),
+                                  child: Container(
+                                    width: constraints.maxWidth / 5,
+                                    height: height / 2.0,
+                                    color: Colors.grey.withOpacity(0.5),
+                                  ),
+                                )),
+                          ));
+                        }
+                        if (widget.rightPane) {
+                          double height = constraints.maxHeight;
+                          double rightTopPadding = 0;
+                          double rightBottomPadding = 0;
+                          if (widget.topPane) {
+                            height -= constraints.maxHeight / 5;
+                            rightTopPadding = constraints.maxHeight / 5;
+                          }
+                          if (widget.bottomPane) {
+                            height -= constraints.maxHeight / 5;
+                            rightBottomPadding = constraints.maxHeight / 5;
+                          }
+
+                          stackElements.add(AnimatedOpacity(
+                            opacity: _rightTopPaneDragOpacity,
+                            duration: const Duration(milliseconds: 200),
+                            child: Align(
+                              alignment: Alignment.topRight,
+                              child: Padding(
+                                padding: EdgeInsets.only(top: rightTopPadding),
+                                child: Container(
+                                  width: constraints.maxWidth / 5,
+                                  height: height / 2.0,
+                                  color: Colors.grey.withOpacity(0.5),
                                 ),
                               ),
-                            ));
-                            stackElements.add(AnimatedOpacity(
-                              opacity: _rightBottomPaneDragOpacity,
-                              duration: const Duration(milliseconds: 200),
-                              child: Align(
-                                  alignment: Alignment.bottomRight,
-                                  child: Padding(
-                                    padding: EdgeInsets.only(bottom: rightBottomPadding),
-                                    child: Container(width: constraints.maxWidth/5, height: height/2.0, color: Colors.grey.withOpacity(0.5),),
-                                  )
-                              ),
-                            ));
-                          }
-
-                          // clear drag target opacity
-                          _clearPaneDragOpacity();
-
-                          // calculate split area depending on enabled panes.
-                          double y1 = 0;
-                          double y2 = constraints.maxHeight;
-                          if (widget.topPane) {
-                            y1 = constraints.maxHeight/5;
-                          }
-                          if (widget.bottomPane) {
-                            y2 = constraints.maxHeight/5*4;
-                          }
-
-                          if (widget.topPane && _dragPosition.dy < constraints.maxHeight/5) {
-                            if (_dragPosition.dx < constraints.maxWidth/2) {
-                              _topLeftPaneDragOpacity = 0.5;
-                            } else if (_dragPosition.dx > constraints.maxWidth/2) {
-                              _topRightPaneDragOpacity = 0.5;
-                            }
-                          } else if (widget.bottomPane && _dragPosition.dy > constraints.maxHeight/5*4) {
-                            if (_dragPosition.dx < constraints.maxWidth/2) {
-                              _bottomLeftPaneDragOpacity = 0.5;
-                            } else if (_dragPosition.dx > constraints.maxWidth/2) {
-                              _bottomRightPaneDragOpacity = 0.5;
-                            }
-                          } else if (widget.leftPane && _dragPosition.dx < constraints.maxWidth/5) {
-                            if (_dragPosition.dy < (y2-y1)/2) {
-                              _leftTopPaneDragOpacity = 0.5;
-                            } else {
-                              _leftBottomPaneDragOpacity = 0.5;
-                            }
-                          } else if (widget.rightPane && _dragPosition.dx > constraints.maxWidth/5*4) {
-                            if (_dragPosition.dy < (y2-y1)/2) {
-                              _rightTopPaneDragOpacity = 0.5;
-                            } else {
-                              _rightBottomPaneDragOpacity = 0.5;
-                            }
-                          }
+                            ),
+                          ));
+                          stackElements.add(AnimatedOpacity(
+                            opacity: _rightBottomPaneDragOpacity,
+                            duration: const Duration(milliseconds: 200),
+                            child: Align(
+                                alignment: Alignment.bottomRight,
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                      bottom: rightBottomPadding),
+                                  child: Container(
+                                    width: constraints.maxWidth / 5,
+                                    height: height / 2.0,
+                                    color: Colors.grey.withOpacity(0.5),
+                                  ),
+                                )),
+                          ));
                         }
 
-                        return Stack(
-                          children: stackElements,
-                        );
-                      },
-                      onAcceptWithDetails: (details) {
+                        // clear drag target opacity
                         _clearPaneDragOpacity();
 
-                        Offset globalPosition = details.offset+const Offset(80,20);
-                        Offset localPosition = (context.findRenderObject() as RenderBox?)!.globalToLocal(globalPosition);
-                        //print(localPosition);
-
-                        DockSide? side;
-                        if (widget.topPane && localPosition.dy < constraints.maxHeight/5) {
-                          if (localPosition.dx < constraints.maxWidth/2) {
-                            side = DockSide.topLeft;
-                          } else {
-                            side = DockSide.topRight;
-                          }
-                        } else if (widget.bottomPane && localPosition.dy > constraints.maxHeight/5*4) {
-                          if (localPosition.dx < constraints.maxWidth/2) {
-                            side = DockSide.bottomLeft;
-                          } else {
-                            side = DockSide.bottomRight;
-                          }
-                        } else if (widget.leftPane && localPosition.dx < constraints.maxWidth/5) {
-                          if (localPosition.dy < constraints.maxHeight/2) {
-                            side = DockSide.leftTop;
-                          } else {
-                            side = DockSide.leftBottom;
-                          }
-                        } else if (widget.rightPane && localPosition.dx > constraints.maxWidth/5*4) {
-                          if (localPosition.dy < constraints.maxHeight/2) {
-                            side = DockSide.rightTop;
-                          } else {
-                            side = DockSide.rightBottom;
-                          }
+                        // calculate split area depending on enabled panes.
+                        double y1 = 0;
+                        double y2 = constraints.maxHeight;
+                        if (widget.topPane) {
+                          y1 = constraints.maxHeight / 5;
+                        }
+                        if (widget.bottomPane) {
+                          y2 = constraints.maxHeight / 5 * 4;
                         }
 
-                        if (side != null) {
-                          _dockPane(details.data, side);
-                          //print('dock pane ${details.data} to side $side');
+                        if (widget.topPane &&
+                            _dragPosition.dy < constraints.maxHeight / 5) {
+                          if (_dragPosition.dx < constraints.maxWidth / 2) {
+                            _topLeftPaneDragOpacity = 0.5;
+                          } else if (_dragPosition.dx >
+                              constraints.maxWidth / 2) {
+                            _topRightPaneDragOpacity = 0.5;
+                          }
+                        } else if (widget.bottomPane &&
+                            _dragPosition.dy > constraints.maxHeight / 5 * 4) {
+                          if (_dragPosition.dx < constraints.maxWidth / 2) {
+                            _bottomLeftPaneDragOpacity = 0.5;
+                          } else if (_dragPosition.dx >
+                              constraints.maxWidth / 2) {
+                            _bottomRightPaneDragOpacity = 0.5;
+                          }
+                        } else if (widget.leftPane &&
+                            _dragPosition.dx < constraints.maxWidth / 5) {
+                          if (_dragPosition.dy < (y2 - y1) / 2) {
+                            _leftTopPaneDragOpacity = 0.5;
+                          } else {
+                            _leftBottomPaneDragOpacity = 0.5;
+                          }
+                        } else if (widget.rightPane &&
+                            _dragPosition.dx > constraints.maxWidth / 5 * 4) {
+                          if (_dragPosition.dy < (y2 - y1) / 2) {
+                            _rightTopPaneDragOpacity = 0.5;
+                          } else {
+                            _rightBottomPaneDragOpacity = 0.5;
+                          }
                         }
-                        setState(() {});
-                      },
-                      onMove: (details) {
-                        Offset globalPosition = details.offset+const Offset(80,20);
-                        _dragPosition = (context.findRenderObject() as RenderBox?)!.globalToLocal(globalPosition);
-                        setState(() {});
-                        //print(_dragPosition);
-                      },
-                    ),
+                      }
+
+                      return Stack(
+                        children: stackElements,
+                      );
+                    },
+                    onAcceptWithDetails: (details) {
+                      _clearPaneDragOpacity();
+
+                      Offset globalPosition =
+                          details.offset + const Offset(80, 20);
+                      Offset localPosition =
+                          (context.findRenderObject() as RenderBox?)!
+                              .globalToLocal(globalPosition);
+                      //print(localPosition);
+
+                      DockSide? side;
+                      if (widget.topPane &&
+                          localPosition.dy < constraints.maxHeight / 5) {
+                        if (localPosition.dx < constraints.maxWidth / 2) {
+                          side = DockSide.topLeft;
+                        } else {
+                          side = DockSide.topRight;
+                        }
+                      } else if (widget.bottomPane &&
+                          localPosition.dy > constraints.maxHeight / 5 * 4) {
+                        if (localPosition.dx < constraints.maxWidth / 2) {
+                          side = DockSide.bottomLeft;
+                        } else {
+                          side = DockSide.bottomRight;
+                        }
+                      } else if (widget.leftPane &&
+                          localPosition.dx < constraints.maxWidth / 5) {
+                        if (localPosition.dy < constraints.maxHeight / 2) {
+                          side = DockSide.leftTop;
+                        } else {
+                          side = DockSide.leftBottom;
+                        }
+                      } else if (widget.rightPane &&
+                          localPosition.dx > constraints.maxWidth / 5 * 4) {
+                        if (localPosition.dy < constraints.maxHeight / 2) {
+                          side = DockSide.rightTop;
+                        } else {
+                          side = DockSide.rightBottom;
+                        }
+                      }
+
+                      if (side != null) {
+                        _dockPane(details.data, side);
+                        //print('dock pane ${details.data} to side $side');
+                      }
+                      setState(() {});
+                    },
+                    onMove: (details) {
+                      Offset globalPosition =
+                          details.offset + const Offset(80, 20);
+                      _dragPosition =
+                          (context.findRenderObject() as RenderBox?)!
+                              .globalToLocal(globalPosition);
+                      setState(() {});
+                      //print(_dragPosition);
+                    },
                   ),
-                  if (rightPaneToolbar != null)
-                    Container(
-                      decoration: BoxDecoration(border: Border(left: BorderSide(color: Colors.grey.shade300))),
-                      child: rightPaneToolbar
-                    ),
-                ],
-              ),
+                ),
+                if (rightPaneToolbar != null)
+                  Container(
+                      decoration: BoxDecoration(
+                          border: Border(
+                              left: BorderSide(color: Colors.grey.shade300))),
+                      child: rightPaneToolbar),
+              ],
             ),
-            if (bottomPaneToolbar != null)
-              bottomPaneToolbar,
-          ],
-        );
-      }
-    );
+          ),
+          if (bottomPaneToolbar != null) bottomPaneToolbar,
+        ],
+      );
+    });
   }
 
   void _dockPane(DockElement element, DockSide side) {
@@ -558,35 +679,35 @@ class DockLayoutState extends State<DockLayout> {
     switch (side) {
       case DockSide.leftTop:
         _leftTopPaneTools.add(element);
-        _leftTopPaneToolsIndex = _leftTopPaneTools.length-1;
+        _leftTopPaneToolsIndex = _leftTopPaneTools.length - 1;
         break;
       case DockSide.leftBottom:
         _leftBottomPaneTools.add(element);
-        _leftBottomPaneToolsIndex = _leftBottomPaneTools.length-1;
+        _leftBottomPaneToolsIndex = _leftBottomPaneTools.length - 1;
         break;
       case DockSide.topLeft:
         _topLeftPaneTools.add(element);
-        _topLeftPaneToolsIndex = _topLeftPaneTools.length-1;
+        _topLeftPaneToolsIndex = _topLeftPaneTools.length - 1;
         break;
       case DockSide.topRight:
         _topRightPaneTools.add(element);
-        _topRightPaneToolsIndex = _topRightPaneTools.length-1;
+        _topRightPaneToolsIndex = _topRightPaneTools.length - 1;
         break;
       case DockSide.rightTop:
         _rightTopPaneTools.add(element);
-        _rightTopPaneToolsIndex = _rightTopPaneTools.length-1;
+        _rightTopPaneToolsIndex = _rightTopPaneTools.length - 1;
         break;
       case DockSide.rightBottom:
         _rightBottomPaneTools.add(element);
-        _rightBottomPaneToolsIndex = _rightBottomPaneTools.length-1;
+        _rightBottomPaneToolsIndex = _rightBottomPaneTools.length - 1;
         break;
       case DockSide.bottomLeft:
         _bottomLeftPaneTools.add(element);
-        _bottomLeftPaneToolsIndex = _bottomLeftPaneTools.length-1;
+        _bottomLeftPaneToolsIndex = _bottomLeftPaneTools.length - 1;
         break;
       case DockSide.bottomRight:
         _bottomRightPaneTools.add(element);
-        _bottomRightPaneToolsIndex = _bottomRightPaneTools.length-1;
+        _bottomRightPaneToolsIndex = _bottomRightPaneTools.length - 1;
         break;
     }
   }
@@ -609,32 +730,44 @@ class DockLayoutState extends State<DockLayout> {
 
     List<Widget> widgets = [];
     if (_leftTopPaneToolsIndex != -1 && _leftBottomPaneToolsIndex == -1) {
-      widgets.add(Expanded(child: _wrapPane(_leftTopPaneTools[_leftTopPaneToolsIndex], DockSide.leftTop)));
-    }
-    else if (_leftTopPaneToolsIndex == -1 && _leftBottomPaneToolsIndex != -1) {
-      widgets.add(Expanded(child: _wrapPane(_leftBottomPaneTools[_leftBottomPaneToolsIndex], DockSide.leftBottom)));
-    }
-    else {
-      widgets.add(SizedBox(height: _leftTopPaneSize, child: _wrapPane(_leftTopPaneTools[_leftTopPaneToolsIndex], DockSide.leftTop)));
-      widgets.add(MouseRegion(
-        cursor: SystemMouseCursors.resizeRow,
-        child: GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onPanUpdate: (details) {
-            _leftTopPaneSize = _leftTopPaneSize! + details.delta.dy;
-            if (_leftTopPaneSize! < _minimumPaneSize) {
-              _leftTopPaneSize = _minimumPaneSize;
-            }
-            setState(() {});
-          },
-          child: Padding(
-            padding: const EdgeInsets.only(top: 3.0, bottom: 3.0),
-            child: Container(height: 1, color: Colors.grey.shade300,),
+      widgets.add(Expanded(
+          child: _wrapPane(
+              _leftTopPaneTools[_leftTopPaneToolsIndex], DockSide.leftTop)));
+    } else if (_leftTopPaneToolsIndex == -1 &&
+        _leftBottomPaneToolsIndex != -1) {
+      widgets.add(Expanded(
+          child: _wrapPane(_leftBottomPaneTools[_leftBottomPaneToolsIndex],
+              DockSide.leftBottom)));
+    } else {
+      widgets.add(SizedBox(
+          height: _leftTopPaneSize,
+          child: _wrapPane(
+              _leftTopPaneTools[_leftTopPaneToolsIndex], DockSide.leftTop)));
+      widgets.add(
+        MouseRegion(
+          cursor: SystemMouseCursors.resizeRow,
+          child: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onPanUpdate: (details) {
+              _leftTopPaneSize = _leftTopPaneSize! + details.delta.dy;
+              if (_leftTopPaneSize! < _minimumPaneSize) {
+                _leftTopPaneSize = _minimumPaneSize;
+              }
+              setState(() {});
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(top: 3.0, bottom: 3.0),
+              child: Container(
+                height: 1,
+                color: Colors.grey.shade300,
+              ),
+            ),
           ),
         ),
-      ),
       );
-      widgets.add(Expanded(child: _wrapPane(_leftBottomPaneTools[_leftBottomPaneToolsIndex], DockSide.leftBottom)));
+      widgets.add(Expanded(
+          child: _wrapPane(_leftBottomPaneTools[_leftBottomPaneToolsIndex],
+              DockSide.leftBottom)));
     }
 
     return Column(
@@ -650,32 +783,44 @@ class DockLayoutState extends State<DockLayout> {
 
     List<Widget> widgets = [];
     if (_rightTopPaneToolsIndex != -1 && _rightBottomPaneToolsIndex == -1) {
-      widgets.add(Expanded(child: _wrapPane(_rightTopPaneTools[_rightTopPaneToolsIndex], DockSide.rightTop)));
-    }
-    else if (_rightTopPaneToolsIndex == -1 && _rightBottomPaneToolsIndex != -1) {
-      widgets.add(Expanded(child: _wrapPane(_rightBottomPaneTools[_rightBottomPaneToolsIndex], DockSide.rightBottom)));
-    }
-    else {
-      widgets.add(SizedBox(height: _rightTopPaneSize, child: _wrapPane(_rightTopPaneTools[_rightTopPaneToolsIndex], DockSide.rightTop)));
-      widgets.add(MouseRegion(
-        cursor: SystemMouseCursors.resizeRow,
-        child: GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onPanUpdate: (details) {
-            _rightTopPaneSize = _rightTopPaneSize! + details.delta.dy;
-            if (_rightTopPaneSize! < _minimumPaneSize) {
-              _rightTopPaneSize = _minimumPaneSize;
-            }
-            setState(() {});
-          },
-          child: Padding(
-            padding: const EdgeInsets.only(top: 3.0, bottom: 3.0),
-            child: Container(height: 1, color: Colors.grey.shade300,),
+      widgets.add(Expanded(
+          child: _wrapPane(
+              _rightTopPaneTools[_rightTopPaneToolsIndex], DockSide.rightTop)));
+    } else if (_rightTopPaneToolsIndex == -1 &&
+        _rightBottomPaneToolsIndex != -1) {
+      widgets.add(Expanded(
+          child: _wrapPane(_rightBottomPaneTools[_rightBottomPaneToolsIndex],
+              DockSide.rightBottom)));
+    } else {
+      widgets.add(SizedBox(
+          height: _rightTopPaneSize,
+          child: _wrapPane(
+              _rightTopPaneTools[_rightTopPaneToolsIndex], DockSide.rightTop)));
+      widgets.add(
+        MouseRegion(
+          cursor: SystemMouseCursors.resizeRow,
+          child: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onPanUpdate: (details) {
+              _rightTopPaneSize = _rightTopPaneSize! + details.delta.dy;
+              if (_rightTopPaneSize! < _minimumPaneSize) {
+                _rightTopPaneSize = _minimumPaneSize;
+              }
+              setState(() {});
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(top: 3.0, bottom: 3.0),
+              child: Container(
+                height: 1,
+                color: Colors.grey.shade300,
+              ),
+            ),
           ),
         ),
-      ),
       );
-      widgets.add(Expanded(child: _wrapPane(_rightBottomPaneTools[_rightBottomPaneToolsIndex], DockSide.rightBottom)));
+      widgets.add(Expanded(
+          child: _wrapPane(_rightBottomPaneTools[_rightBottomPaneToolsIndex],
+              DockSide.rightBottom)));
     }
 
     return Column(
@@ -691,32 +836,43 @@ class DockLayoutState extends State<DockLayout> {
 
     List<Widget> widgets = [];
     if (_topLeftPaneToolsIndex != -1 && _topRightPaneToolsIndex == -1) {
-      widgets.add(Expanded(child: _wrapPane(_topLeftPaneTools[_topLeftPaneToolsIndex], DockSide.topLeft)));
-    }
-    else if (_topLeftPaneToolsIndex == -1 && _topRightPaneToolsIndex != -1) {
-      widgets.add(Expanded(child: _wrapPane(_topRightPaneTools[_topRightPaneToolsIndex], DockSide.topRight)));
-    }
-    else {
-      widgets.add(SizedBox(width: _topLeftPaneSize, child: _wrapPane(_topLeftPaneTools[_topLeftPaneToolsIndex], DockSide.topLeft)));
-      widgets.add(MouseRegion(
-        cursor: SystemMouseCursors.resizeColumn,
-        child: GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onPanUpdate: (details) {
-            _topLeftPaneSize = _topLeftPaneSize! + details.delta.dx;
-            if (_topLeftPaneSize! < _minimumPaneSize) {
-              _topLeftPaneSize = _minimumPaneSize;
-            }
-            setState(() {});
-          },
-          child: Padding(
-            padding: const EdgeInsets.only(left: 3.0, right: 3.0),
-            child: Container(width: 1, color: Colors.grey.shade300,),
+      widgets.add(Expanded(
+          child: _wrapPane(
+              _topLeftPaneTools[_topLeftPaneToolsIndex], DockSide.topLeft)));
+    } else if (_topLeftPaneToolsIndex == -1 && _topRightPaneToolsIndex != -1) {
+      widgets.add(Expanded(
+          child: _wrapPane(
+              _topRightPaneTools[_topRightPaneToolsIndex], DockSide.topRight)));
+    } else {
+      widgets.add(SizedBox(
+          width: _topLeftPaneSize,
+          child: _wrapPane(
+              _topLeftPaneTools[_topLeftPaneToolsIndex], DockSide.topLeft)));
+      widgets.add(
+        MouseRegion(
+          cursor: SystemMouseCursors.resizeColumn,
+          child: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onPanUpdate: (details) {
+              _topLeftPaneSize = _topLeftPaneSize! + details.delta.dx;
+              if (_topLeftPaneSize! < _minimumPaneSize) {
+                _topLeftPaneSize = _minimumPaneSize;
+              }
+              setState(() {});
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(left: 3.0, right: 3.0),
+              child: Container(
+                width: 1,
+                color: Colors.grey.shade300,
+              ),
+            ),
           ),
         ),
-      ),
       );
-      widgets.add(Expanded(child: _wrapPane(_topRightPaneTools[_topRightPaneToolsIndex], DockSide.topRight)));
+      widgets.add(Expanded(
+          child: _wrapPane(
+              _topRightPaneTools[_topRightPaneToolsIndex], DockSide.topRight)));
     }
 
     return Row(
@@ -732,32 +888,44 @@ class DockLayoutState extends State<DockLayout> {
 
     List<Widget> widgets = [];
     if (_bottomLeftPaneToolsIndex != -1 && _bottomRightPaneToolsIndex == -1) {
-      widgets.add(Expanded(child: _wrapPane(_bottomLeftPaneTools[_bottomLeftPaneToolsIndex], DockSide.bottomLeft)));
-    }
-    else if (_bottomLeftPaneToolsIndex == -1 && _bottomRightPaneToolsIndex != -1) {
-      widgets.add(Expanded(child: _wrapPane(_bottomRightPaneTools[_bottomRightPaneToolsIndex], DockSide.bottomRight)));
-    }
-    else {
-      widgets.add(SizedBox(width: _bottomLeftPaneSize, child: _wrapPane(_bottomLeftPaneTools[_bottomLeftPaneToolsIndex], DockSide.bottomLeft)));
-      widgets.add(MouseRegion(
-        cursor: SystemMouseCursors.resizeColumn,
-        child: GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onPanUpdate: (details) {
-            _bottomLeftPaneSize = _bottomLeftPaneSize! + details.delta.dx;
-            if (_bottomLeftPaneSize! < _minimumPaneSize) {
-              _bottomLeftPaneSize = _minimumPaneSize;
-            }
-            setState(() {});
-          },
-          child: Padding(
-            padding: const EdgeInsets.only(left: 3.0, right: 3.0),
-            child: Container(width: 1, color: Colors.grey.shade300,),
+      widgets.add(Expanded(
+          child: _wrapPane(_bottomLeftPaneTools[_bottomLeftPaneToolsIndex],
+              DockSide.bottomLeft)));
+    } else if (_bottomLeftPaneToolsIndex == -1 &&
+        _bottomRightPaneToolsIndex != -1) {
+      widgets.add(Expanded(
+          child: _wrapPane(_bottomRightPaneTools[_bottomRightPaneToolsIndex],
+              DockSide.bottomRight)));
+    } else {
+      widgets.add(SizedBox(
+          width: _bottomLeftPaneSize,
+          child: _wrapPane(_bottomLeftPaneTools[_bottomLeftPaneToolsIndex],
+              DockSide.bottomLeft)));
+      widgets.add(
+        MouseRegion(
+          cursor: SystemMouseCursors.resizeColumn,
+          child: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onPanUpdate: (details) {
+              _bottomLeftPaneSize = _bottomLeftPaneSize! + details.delta.dx;
+              if (_bottomLeftPaneSize! < _minimumPaneSize) {
+                _bottomLeftPaneSize = _minimumPaneSize;
+              }
+              setState(() {});
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(left: 3.0, right: 3.0),
+              child: Container(
+                width: 1,
+                color: Colors.grey.shade300,
+              ),
+            ),
           ),
         ),
-      ),
       );
-      widgets.add(Expanded(child: _wrapPane(_bottomRightPaneTools[_bottomRightPaneToolsIndex], DockSide.bottomRight)));
+      widgets.add(Expanded(
+          child: _wrapPane(_bottomRightPaneTools[_bottomRightPaneToolsIndex],
+              DockSide.bottomRight)));
     }
 
     return Row(
@@ -767,18 +935,23 @@ class DockLayoutState extends State<DockLayout> {
   }
 
   Widget _wrapPane(DockElement pane, DockSide side) {
-
     return ClipRect(
       child: MouseRegion(
-        onEnter: (event) => setState(() { _paneOpacityButtons[pane] = 1.0; }),
-        onExit: (event) => setState(() { _paneOpacityButtons[pane] = 0.0; }),
+        onEnter: (event) => setState(() {
+          _paneOpacityButtons[pane] = 1.0;
+        }),
+        onExit: (event) => setState(() {
+          _paneOpacityButtons[pane] = 0.0;
+        }),
         child: Column(
           children: [
             Row(
               children: [
-                Expanded(child: Draggable(
+                Expanded(
+                    child: Draggable(
                   data: pane,
-                  dragAnchorStrategy: (draggable, context, position) => const Offset(80,20),
+                  dragAnchorStrategy: (draggable, context, position) =>
+                      const Offset(80, 20),
                   feedback: Material(
                     color: Colors.transparent,
                     child: Opacity(
@@ -787,19 +960,25 @@ class DockLayoutState extends State<DockLayout> {
                         width: 160,
                         height: 160,
                         decoration: BoxDecoration(
-                          color: Colors.grey.shade300,
-                          border: Border.all(color: Colors.grey.shade500)
-                        ),
+                            color: Colors.grey.shade300,
+                            border: Border.all(color: Colors.grey.shade500)),
                         child: Padding(
                           padding: const EdgeInsets.all(4.0),
-                          child: Text(pane.name, style: TextStyle(color: Colors.grey.shade700, fontSize: 14)),
+                          child: Text(pane.name,
+                              style: TextStyle(
+                                  color: Colors.grey.shade700, fontSize: 14)),
                         ),
                       ),
                     ),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(pane.name, style: TextStyle(color: Colors.grey.shade700), overflow: TextOverflow.clip, maxLines: 1,),
+                    child: Text(
+                      pane.name,
+                      style: TextStyle(color: Colors.grey.shade700),
+                      overflow: TextOverflow.clip,
+                      maxLines: 1,
+                    ),
                   ),
                 )),
                 AnimatedOpacity(
@@ -811,12 +990,14 @@ class DockLayoutState extends State<DockLayout> {
                       Padding(
                         padding: const EdgeInsets.only(right: 4.0),
                         child: InkWell(
-                          onTap: () {
-
-                          },
+                          onTap: () {},
                           child: Padding(
                             padding: const EdgeInsets.all(1.0),
-                            child: Icon(Icons.more_vert, color: Colors.grey.shade400, size: 16,),
+                            child: Icon(
+                              Icons.more_vert,
+                              color: Colors.grey.shade400,
+                              size: 16,
+                            ),
                           ),
                         ),
                       ),
@@ -826,16 +1007,16 @@ class DockLayoutState extends State<DockLayout> {
                           onTap: () {
                             switch (side) {
                               case DockSide.leftTop:
-                                _leftTopPaneToolsIndex=-1;
+                                _leftTopPaneToolsIndex = -1;
                                 break;
                               case DockSide.leftBottom:
-                                _leftBottomPaneToolsIndex=-1;
+                                _leftBottomPaneToolsIndex = -1;
                                 break;
                               case DockSide.topLeft:
-                                _topLeftPaneToolsIndex=-1;
+                                _topLeftPaneToolsIndex = -1;
                                 break;
                               case DockSide.topRight:
-                                _topRightPaneToolsIndex=-1;
+                                _topRightPaneToolsIndex = -1;
                                 break;
                               case DockSide.rightTop:
                                 _rightTopPaneToolsIndex = -1;
@@ -854,7 +1035,10 @@ class DockLayoutState extends State<DockLayout> {
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(1.0),
-                            child: Icon(Icons.remove, color: Colors.grey.shade400,),
+                            child: Icon(
+                              Icons.remove,
+                              color: Colors.grey.shade400,
+                            ),
                           ),
                         ),
                       )
@@ -872,7 +1056,6 @@ class DockLayoutState extends State<DockLayout> {
 
   // get all buttons associated to side
   List<Widget> _getSideElements(DockSide side, double size) {
-
     List<Widget> toReturn = [];
 
     List<DockElement> tools;
@@ -904,7 +1087,6 @@ class DockLayoutState extends State<DockLayout> {
     }
 
     for (var tool in tools) {
-
       Widget w;
 
       if (tool.icon != null) {
@@ -919,14 +1101,10 @@ class DockLayoutState extends State<DockLayout> {
         );
       }
       toReturn.add(InkWell(
-        onTap: () {
-          _presentElement(tool);
-        },
-        child: Tooltip(
-          message: tool.name,
-          child: w
-        )
-      ));
+          onTap: () {
+            _presentElement(tool);
+          },
+          child: Tooltip(message: tool.name, child: w)));
     }
 
     return toReturn;
@@ -934,29 +1112,34 @@ class DockLayoutState extends State<DockLayout> {
 
   // compose toolbar
   Widget? _getToolbar(DockToolbar toolbarDef, Axis axis) {
-
     List<Widget> widgets = [];
 
-    for (int a=0; a<toolbarDef.part1.length; a++) {
-      List<Widget> elements = _getSideElements(toolbarDef.part1[a], toolbarDef.toolbarSize);
+    for (int a = 0; a < toolbarDef.part1.length; a++) {
+      List<Widget> elements =
+          _getSideElements(toolbarDef.part1[a], toolbarDef.toolbarSize);
       if (widgets.isNotEmpty && elements.isNotEmpty) {
         widgets.add(Container(
-          decoration: BoxDecoration(border: Border(top: BorderSide(color: Colors.grey.shade300))),
+          decoration: BoxDecoration(
+              border: Border(top: BorderSide(color: Colors.grey.shade300))),
         ));
       }
       widgets.addAll(elements);
     }
-    widgets.add(Expanded(child: Container(),));
+    widgets.add(Expanded(
+      child: Container(),
+    ));
     List<Widget> widgetsPart2 = [];
     for (DockSide side in toolbarDef.part2) {
       List<Widget> elements = _getSideElements(side, toolbarDef.toolbarSize);
       if (widgetsPart2.isNotEmpty && elements.isNotEmpty) {
         widgetsPart2.add(Padding(
-          padding: axis==Axis.horizontal ? const EdgeInsets.fromLTRB(3, 8, 3, 8) : const EdgeInsets.fromLTRB(8, 3, 8, 3),
+          padding: axis == Axis.horizontal
+              ? const EdgeInsets.fromLTRB(3, 8, 3, 8)
+              : const EdgeInsets.fromLTRB(8, 3, 8, 3),
           child: Container(
             color: Colors.grey.shade300,
-            width: axis==Axis.horizontal?1:null,
-            height: axis==Axis.horizontal?null:1,
+            width: axis == Axis.horizontal ? 1 : null,
+            height: axis == Axis.horizontal ? null : 1,
           ),
         ));
       }
@@ -990,8 +1173,7 @@ class DockLayoutState extends State<DockLayout> {
 
   // bring to front element
   void _presentElement(DockElement element) {
-
-    for (int a=0; a<_leftTopPaneTools.length; a++) {
+    for (int a = 0; a < _leftTopPaneTools.length; a++) {
       if (_leftTopPaneTools[a] == element) {
         if (_leftTopPaneToolsIndex == a) {
           _leftTopPaneToolsIndex = -1;
@@ -1002,7 +1184,7 @@ class DockLayoutState extends State<DockLayout> {
       }
     }
 
-    for (int a=0; a<_leftBottomPaneTools.length; a++) {
+    for (int a = 0; a < _leftBottomPaneTools.length; a++) {
       if (_leftBottomPaneTools[a] == element) {
         if (_leftBottomPaneToolsIndex == a) {
           _leftBottomPaneToolsIndex = -1;
@@ -1013,7 +1195,7 @@ class DockLayoutState extends State<DockLayout> {
       }
     }
 
-    for (int a=0; a<_topLeftPaneTools.length; a++) {
+    for (int a = 0; a < _topLeftPaneTools.length; a++) {
       if (_topLeftPaneTools[a] == element) {
         if (_topLeftPaneToolsIndex == a) {
           _topLeftPaneToolsIndex = -1;
@@ -1024,7 +1206,7 @@ class DockLayoutState extends State<DockLayout> {
       }
     }
 
-    for (int a=0; a<_topRightPaneTools.length; a++) {
+    for (int a = 0; a < _topRightPaneTools.length; a++) {
       if (_topRightPaneTools[a] == element) {
         if (_topRightPaneToolsIndex == a) {
           _topRightPaneToolsIndex = -1;
@@ -1035,7 +1217,7 @@ class DockLayoutState extends State<DockLayout> {
       }
     }
 
-    for (int a=0; a<_rightTopPaneTools.length; a++) {
+    for (int a = 0; a < _rightTopPaneTools.length; a++) {
       if (_rightTopPaneTools[a] == element) {
         if (_rightTopPaneToolsIndex == a) {
           _rightTopPaneToolsIndex = -1;
@@ -1046,7 +1228,7 @@ class DockLayoutState extends State<DockLayout> {
       }
     }
 
-    for (int a=0; a<_rightBottomPaneTools.length; a++) {
+    for (int a = 0; a < _rightBottomPaneTools.length; a++) {
       if (_rightBottomPaneTools[a] == element) {
         if (_rightBottomPaneToolsIndex == a) {
           _rightBottomPaneToolsIndex = -1;
@@ -1057,7 +1239,7 @@ class DockLayoutState extends State<DockLayout> {
       }
     }
 
-    for (int a=0; a<_bottomLeftPaneTools.length; a++) {
+    for (int a = 0; a < _bottomLeftPaneTools.length; a++) {
       if (_bottomLeftPaneTools[a] == element) {
         if (_bottomLeftPaneToolsIndex == a) {
           _bottomLeftPaneToolsIndex = -1;
@@ -1068,7 +1250,7 @@ class DockLayoutState extends State<DockLayout> {
       }
     }
 
-    for (int a=0; a<_bottomRightPaneTools.length; a++) {
+    for (int a = 0; a < _bottomRightPaneTools.length; a++) {
       if (_bottomRightPaneTools[a] == element) {
         if (_bottomRightPaneToolsIndex == a) {
           _bottomRightPaneToolsIndex = -1;

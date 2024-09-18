@@ -1,25 +1,22 @@
-
 import 'dart:collection';
 
 import 'package:editor_widgets/tabbed_document.dart';
 import 'package:editor_widgets/tabbed_layout_container.dart';
 import 'package:flutter/material.dart';
 
+/// Tab layout widget
 class TabbedLayout extends StatefulWidget {
-
-  //final TabbedLayoutContainer container;
-
+  /// default constructor
   const TabbedLayout({super.key});
 
   @override
   State<StatefulWidget> createState() {
     return TabbedLayoutState();
   }
-
 }
 
+/// [TabbedLayout] state implementation
 class TabbedLayoutState extends State<TabbedLayout> {
-
   late TabbedLayoutContainer _container;
 
   @override
@@ -38,13 +35,12 @@ class TabbedLayoutState extends State<TabbedLayout> {
 
   @override
   Widget build(BuildContext context) {
-
     Widget content = Container();
-    if (_container.activeDocument != null && _container.activeDocument!.widgetBuilder != null) {
+    if (_container.activeDocument != null &&
+        _container.activeDocument!.widgetBuilder != null) {
       content = Container(
-        key: ObjectKey(_container.activeDocument),
-        child: _container.activeDocument!.widgetBuilder!(context)
-      );
+          key: ObjectKey(_container.activeDocument),
+          child: _container.activeDocument!.widgetBuilder!(context));
     }
 
     return Column(
@@ -52,40 +48,52 @@ class TabbedLayoutState extends State<TabbedLayout> {
       children: [
         Container(
           decoration: BoxDecoration(
-            border: Border(bottom: BorderSide(color: Colors.grey.shade300))
-          ),
+              border: Border(bottom: BorderSide(color: Colors.grey.shade300))),
           child: SizedBox(
             height: 40,
             child: ListView(
               scrollDirection: Axis.horizontal,
-              children: _container.documents.map((element) => Container(
-                decoration: BoxDecoration(
-                  border: Border(bottom: BorderSide(
-                    color: element==_container.activeDocument ? Colors.grey.shade400 : Colors.transparent,
-                    width: 4
-                  ))
-                ),
-                child: InkWell(
-                  onTap: () {
-                    _container.activeDocument = element;
-                    setState(() {});
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                    child: Row(children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: FittedBox(child: element.icon??  const FlutterLogo(),),
+              children: _container.documents
+                  .map(
+                    (element) => Container(
+                      decoration: BoxDecoration(
+                          border: Border(
+                              bottom: BorderSide(
+                                  color: element == _container.activeDocument
+                                      ? Colors.grey.shade400
+                                      : Colors.transparent,
+                                  width: 4))),
+                      child: InkWell(
+                        onTap: () {
+                          _container.activeDocument = element;
+                          setState(() {});
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: FittedBox(
+                                  child: element.icon ?? const FlutterLogo(),
+                                ),
+                              ),
+                              Text(element.name),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 6.0),
+                                child: Icon(
+                                  Icons.close,
+                                  size: 13,
+                                  color: Colors.grey.shade400,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
                       ),
-                      Text(element.name),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 6.0),
-                        child: Icon(Icons.close, size: 13, color: Colors.grey.shade400,),
-                      )
-                    ],),
-                  ),
-                ),
-              ),).toList(),
+                    ),
+                  )
+                  .toList(),
             ),
           ),
         ),
@@ -110,10 +118,10 @@ class TabbedLayoutState extends State<TabbedLayout> {
     );*/
   }
 
+  /// get [TabbedLayoutContainer] container
   TabbedLayoutContainer get container => _container;
 
   void _refresh(UnmodifiableListView<TabbedDocument> documents) {
     setState(() {});
   }
-
 }

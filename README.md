@@ -1,4 +1,4 @@
-Useful widgets to create IDE like layouts.
+Useful widgets to create IDE-like layouts.
 
 ## Features
 

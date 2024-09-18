@@ -37,7 +37,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   late DockLayout _dock;
   final GlobalKey<TabbedLayoutState> _tabbedLayoutKey = GlobalKey();
 
@@ -48,35 +47,41 @@ class _MyHomePageState extends State<MyHomePage> {
     _dock = DockLayout(
       topPane: false,
       leftPaneToolbar: const DockToolbar(
-        part1: [DockSide.topLeft, DockSide.leftTop],
-        part2: [DockSide.leftBottom, DockSide.bottomLeft]
-      ),
+          part1: [DockSide.topLeft, DockSide.leftTop],
+          part2: [DockSide.leftBottom, DockSide.bottomLeft]),
       rightPaneToolbar: const DockToolbar(
-        part1: [DockSide.topRight, DockSide.rightTop],
-        part2: [DockSide.rightBottom, DockSide.bottomRight]
-      ),
-      tools: const [
+          part1: [DockSide.topRight, DockSide.rightTop],
+          part2: [DockSide.rightBottom, DockSide.bottomRight]),
+      elements: const [
         DockElement(
             name: 'Explorer',
-            widget: Center(child: Text('Explorer'),),
-            icon: Icon(Icons.folder_outlined, color: Colors.grey,),
+            widget: Center(
+              child: Text('Explorer'),
+            ),
+            icon: Icon(
+              Icons.folder_outlined,
+              color: Colors.grey,
+            ),
             preferredDockSide: DockSide.leftTop,
-            visible: true
-        ),
+            visible: true),
         DockElement(
             name: 'Messages',
-            widget: Center(child: Text('Messages'),),
+            widget: Center(
+              child: Text('Messages'),
+            ),
             preferredDockSide: DockSide.rightTop,
-            visible: true
-        ),
+            visible: true),
         DockElement(
             name: 'Info',
-            widget: Center(child: Text('Info'),),
+            widget: Center(
+              child: Text('Info'),
+            ),
             preferredDockSide: DockSide.bottomLeft,
-            visible: true
-        ),
+            visible: true),
       ],
-      child: TabbedLayout(key: _tabbedLayoutKey,),
+      child: TabbedLayout(
+        key: _tabbedLayoutKey,
+      ),
     );
   }
 
@@ -89,8 +94,8 @@ class _MyHomePageState extends State<MyHomePage> {
           Container(
             height: 50,
             decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(color: Colors.grey.shade300))
-            ),
+                border:
+                    Border(bottom: BorderSide(color: Colors.grey.shade300))),
             child: Padding(
               padding: const EdgeInsets.only(left: 16.0),
               child: Row(
@@ -98,11 +103,16 @@ class _MyHomePageState extends State<MyHomePage> {
                   InkWell(
                     onTap: () {
                       if (_tabbedLayoutKey.currentState != null) {
-                        _tabbedLayoutKey.currentState!.container.addDocument(TabbedDocument(
+                        _tabbedLayoutKey.currentState!.container
+                            .addDocument(TabbedDocument(
                           name: 'name',
                           icon: const Icon(Icons.file_copy),
                           widgetBuilder: (context) {
-                            return TextFormField(expands: true, maxLines: null, minLines: null,);
+                            return TextFormField(
+                              expands: true,
+                              maxLines: null,
+                              minLines: null,
+                            );
                           },
                         ));
                         //print(_tabbedLayoutKey.currentState!.container.documents.length);
@@ -123,9 +133,9 @@ class _MyHomePageState extends State<MyHomePage> {
           Container(
             width: double.infinity,
             decoration: BoxDecoration(
-              color: Colors.grey.shade100,
-              border: Border(top: BorderSide(color: Colors.grey.shade300, width: 1))
-            ),
+                color: Colors.grey.shade100,
+                border: Border(
+                    top: BorderSide(color: Colors.grey.shade300, width: 1))),
             child: const Padding(
               padding: EdgeInsets.only(left: 12.0),
               child: Text('status bar...'),

@@ -1,6 +1,6 @@
 name: editor_widgets
-description: "Editor widgets"
-version: 0.0.1
+description: "Useful widgets to create IDE-like layouts"
+version: 0.0.2
 homepage: https://github.com/rusoleal/editor_widgets
 
 environment:
