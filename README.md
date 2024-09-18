@@ -9,12 +9,3 @@ Useful widgets to create IDE like layouts.
 
 See example...
 
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
-```dart
-const like = 'sample';
-```
-
