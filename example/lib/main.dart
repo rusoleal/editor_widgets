@@ -54,30 +54,33 @@ class _MyHomePageState extends State<MyHomePage> {
           part2: [DockSide.rightBottom, DockSide.bottomRight]),
       elements: const [
         DockElement(
-            name: 'Explorer',
-            widget: Center(
-              child: Text('Explorer'),
-            ),
-            icon: Icon(
-              Icons.folder_outlined,
-              color: Colors.grey,
-            ),
-            preferredDockSide: DockSide.leftTop,
-            visible: true),
+          id:'Explorer',
+          name: 'Explorer',
+          widget: Center(
+            child: Text('Explorer'),
+          ),
+          icon: Icon(
+            Icons.folder_outlined,
+            color: Colors.grey,
+          ),
+          preferredDockSide: DockSide.leftTop,
+          visible: true),
         DockElement(
-            name: 'Messages',
-            widget: Center(
-              child: Text('Messages'),
-            ),
-            preferredDockSide: DockSide.rightTop,
-            visible: true),
+          id: 'Messages',
+          name: 'Messages',
+          widget: Center(
+            child: Text('Messages'),
+          ),
+          preferredDockSide: DockSide.rightTop,
+          visible: true),
         DockElement(
-            name: 'Info',
-            widget: Center(
-              child: Text('Info'),
-            ),
-            preferredDockSide: DockSide.bottomLeft,
-            visible: true),
+          id: 'Info',
+          name: 'Info',
+          widget: Center(
+            child: Text('Info'),
+          ),
+          preferredDockSide: DockSide.bottomLeft,
+          visible: true),
       ],
       child: TabbedLayout(
         key: _tabbedLayoutKey,

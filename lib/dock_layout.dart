@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:editor_widgets/dock_element.dart';
 import 'package:editor_widgets/dock_side.dart';
 import 'package:editor_widgets/dock_toolbar.dart';
@@ -35,6 +37,9 @@ class DockLayout extends StatefulWidget {
   /// bottom toolbar definition.
   final DockToolbar bottomPaneToolbar;
 
+  /// optional persistent data to restore pane list and sizes.
+  final String? persistentData;
+
   /// default constructor.
   const DockLayout(
       {super.key,
@@ -47,7 +52,9 @@ class DockLayout extends StatefulWidget {
       this.leftPaneToolbar = const DockToolbar(),
       this.topPaneToolbar = const DockToolbar(),
       this.rightPaneToolbar = const DockToolbar(),
-      this.bottomPaneToolbar = const DockToolbar()});
+      this.bottomPaneToolbar = const DockToolbar(),
+      this.persistentData
+      });
 
   @override
   State<StatefulWidget> createState() {
@@ -102,11 +109,6 @@ class DockLayoutState extends State<DockLayout> {
   void initState() {
     super.initState();
 
-    updatePanes();
-  }
-
-  /// recalculate pane sizes
-  void updatePanes() {
     _paneOpacityButtons = {};
 
     _leftTopPaneTools = [];
@@ -133,74 +135,330 @@ class DockLayoutState extends State<DockLayout> {
     _bottomRightPaneToolsIndex = -1;
     _bottomPaneSize = 300;
 
+    _updatePanes();
+    if (widget.persistentData != null) {
+      _restorePanes(widget.persistentData!);
+    }
+  }
+
+  /*@override
+  void didUpdateWidget(covariant DockLayout oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    print('DockLayoutState.didUpdateWidget');
+    _updatePanes();
+  }*/
+
+  /// restore pane from persistentData
+  void _restorePanes(String data) {
+    try {
+      Map<String,dynamic> json = jsonDecode(data);
+      _leftPaneSize = json['leftSize'];
+      _leftTopPaneSize = json['leftTopSize'];
+      _topPaneSize = json['topSize'];
+      _topLeftPaneSize = json['topLeftSize'];
+      _rightPaneSize = json['rightSize'];
+      _rightTopPaneSize = json['rightTopSize'];
+      _bottomPaneSize = json['bottomSize'];
+      _bottomLeftPaneSize = json['bottomLeftSize'];
+
+      List<DockElement> leftTopElements = [];
+      List<DockElement> leftBottomElements = [];
+      List<DockElement> topLeftElements = [];
+      List<DockElement> topRightElements = [];
+      List<DockElement> rightTopElements = [];
+      List<DockElement> rightBottomElements = [];
+      List<DockElement> bottomLeftElements = [];
+      List<DockElement> bottomRightElements = [];
+
+      dynamic leftTopPane = json['leftTopPane'];
+      for (var elementId in leftTopPane) {
+        int index = widget.elements.indexWhere((element) => element.id == elementId,);
+        if (index != -1) {
+          leftTopElements.add(widget.elements[index]);
+        }
+      }
+      dynamic leftBottomPane = json['leftBottomPane'];
+      for (var elementId in leftBottomPane) {
+        int index = widget.elements.indexWhere((element) => element.id == elementId,);
+        if (index != -1) {
+          leftBottomElements.add(widget.elements[index]);
+        }
+      }
+      dynamic topLeftPane = json['topLeftPane'];
+      for (var elementId in topLeftPane) {
+        int index = widget.elements.indexWhere((element) => element.id == elementId,);
+        if (index != -1) {
+          topLeftElements.add(widget.elements[index]);
+        }
+      }
+      dynamic topRightPane = json['topRightPane'];
+      for (var elementId in topRightPane) {
+        int index = widget.elements.indexWhere((element) => element.id == elementId,);
+        if (index != -1) {
+          topRightElements.add(widget.elements[index]);
+        }
+      }
+      dynamic rightTopPane = json['rightTopPane'];
+      for (var elementId in rightTopPane) {
+        int index = widget.elements.indexWhere((element) => element.id == elementId,);
+        if (index != -1) {
+          rightTopElements.add(widget.elements[index]);
+        }
+      }
+      dynamic rightBottomPane = json['rightBottomPane'];
+      for (var elementId in rightBottomPane) {
+        int index = widget.elements.indexWhere((element) => element.id == elementId,);
+        if (index != -1) {
+          rightBottomElements.add(widget.elements[index]);
+        }
+      }
+      dynamic bottomLeftPane = json['bottomLeftPane'];
+      for (var elementId in bottomLeftPane) {
+        int index = widget.elements.indexWhere((element) => element.id == elementId,);
+        if (index != -1) {
+          bottomLeftElements.add(widget.elements[index]);
+        }
+      }
+      dynamic bottomRightPane = json['bottomRightPane'];
+      for (var elementId in bottomRightPane) {
+        int index = widget.elements.indexWhere((element) => element.id == elementId,);
+        if (index != -1) {
+          bottomRightElements.add(widget.elements[index]);
+        }
+      }
+
+      _leftTopPaneTools = leftTopElements;
+      _leftBottomPaneTools = leftBottomElements;
+      _topLeftPaneTools = topLeftElements;
+      _topRightPaneTools = topRightElements;
+      _rightTopPaneTools = rightTopElements;
+      _rightBottomPaneTools = rightBottomElements;
+      _bottomLeftPaneTools = bottomLeftElements;
+      _bottomRightPaneTools = bottomRightElements;
+
+      _leftTopPaneToolsIndex =  json['leftTopPaneIndex'];
+      _leftTopPaneToolsIndex = json['leftTopPaneIndex'];
+      _leftBottomPaneToolsIndex = json['leftBottomPaneIndex'];
+      _topLeftPaneToolsIndex = json['topLeftPaneIndex'];
+      _topRightPaneToolsIndex = json['topRightPaneIndex'];
+      _rightTopPaneToolsIndex = json['rightTopPaneIndex'];
+      _rightBottomPaneToolsIndex = json['rightBottomPaneIndex'];
+      _bottomLeftPaneToolsIndex = json['bottomLeftPaneIndex'];
+      _bottomRightPaneToolsIndex = json['bottomRightPaneIndex'];
+      _sanitizePaneIndex();
+
+    } catch (ex) {
+      print(ex);
+    }
+  }
+
+  /// check and repair incorrect pane index
+  void _sanitizePaneIndex() {
+    if (_leftTopPaneToolsIndex < -1) {
+      _leftTopPaneToolsIndex = -1;
+    } else if (_leftTopPaneToolsIndex >= _leftTopPaneTools.length) {
+      _leftTopPaneToolsIndex = _leftTopPaneTools.length-1;
+    }
+    if (_leftBottomPaneToolsIndex < -1) {
+      _leftBottomPaneToolsIndex = -1;
+    } else if (_leftBottomPaneToolsIndex >= _leftBottomPaneTools.length) {
+      _leftBottomPaneToolsIndex = _leftBottomPaneTools.length-1;
+    }
+    if (_topLeftPaneToolsIndex < -1) {
+      _topLeftPaneToolsIndex = -1;
+    } else if (_topLeftPaneToolsIndex >= _topLeftPaneTools.length) {
+      _topLeftPaneToolsIndex = _topLeftPaneTools.length-1;
+    }
+    if (_topRightPaneToolsIndex < -1) {
+      _topRightPaneToolsIndex = -1;
+    } else if (_topRightPaneToolsIndex >= _topRightPaneTools.length) {
+      _topRightPaneToolsIndex = _topRightPaneTools.length-1;
+    }
+    if (_rightTopPaneToolsIndex < -1) {
+      _rightTopPaneToolsIndex = -1;
+    } else if (_rightTopPaneToolsIndex >= _rightTopPaneTools.length) {
+      _rightTopPaneToolsIndex = _rightTopPaneTools.length-1;
+    }
+    if (_rightBottomPaneToolsIndex < -1) {
+      _rightBottomPaneToolsIndex = -1;
+    } else if (_rightBottomPaneToolsIndex >= _rightBottomPaneTools.length) {
+      _rightBottomPaneToolsIndex = _rightBottomPaneTools.length-1;
+    }
+    if (_bottomLeftPaneToolsIndex < -1) {
+      _bottomLeftPaneToolsIndex = -1;
+    } else if (_bottomLeftPaneToolsIndex >= _bottomLeftPaneTools.length) {
+      _bottomLeftPaneToolsIndex = _bottomLeftPaneTools.length-1;
+    }
+    if (_bottomRightPaneToolsIndex < -1) {
+      _bottomRightPaneToolsIndex = -1;
+    } else if (_bottomRightPaneToolsIndex >= _bottomRightPaneTools.length) {
+      _bottomRightPaneToolsIndex = _bottomRightPaneTools.length-1;
+    }
+  }
+
+  /// recalculate pane sizes from last state
+  void _updatePanes() {
+
+    List<DockElement> leftTop = [];
+    List<DockElement> leftBottom = [];
+    List<DockElement> topLeft = [];
+    List<DockElement> topRight = [];
+    List<DockElement> rightTop = [];
+    List<DockElement> rightBottom = [];
+    List<DockElement> bottomLeft = [];
+    List<DockElement> bottomRight = [];
+    int leftTopIndex = -1;
+    int leftBottomIndex = -1;
+    int topLeftIndex = -1;
+    int topRightIndex = -1;
+    int rightTopIndex = -1;
+    int rightBottomIndex = -1;
+    int bottomLeftIndex = -1;
+    int bottomRightIndex = -1;
+
     for (DockElement element in widget.elements) {
-      switch (element.preferredDockSide) {
+      DockSide side = _getElementDockSide(element) ?? element.preferredDockSide;
+      switch (side) {
         case DockSide.leftTop:
-          _leftTopPaneTools.add(element);
-          if (element.visible &&
-              widget.leftPane &&
-              _leftTopPaneToolsIndex == -1) {
-            _leftTopPaneToolsIndex = _leftTopPaneTools.length - 1;
+          leftTop.add(element);
+          if (element.visible && widget.leftPane && leftTopIndex == -1) {
+            leftTopIndex = leftTop.length - 1;
           }
           break;
         case DockSide.leftBottom:
-          _leftBottomPaneTools.add(element);
-          if (element.visible &&
-              widget.leftPane &&
-              _leftBottomPaneToolsIndex == -1) {
-            _leftBottomPaneToolsIndex = _leftBottomPaneTools.length - 1;
+          leftBottom.add(element);
+          if (element.visible && widget.leftPane && leftBottomIndex == -1) {
+            leftBottomIndex = leftBottom.length - 1;
           }
           break;
         case DockSide.topLeft:
-          _topLeftPaneTools.add(element);
-          if (element.visible &&
-              widget.topPane &&
-              _topLeftPaneToolsIndex == -1) {
-            _topLeftPaneToolsIndex = _topLeftPaneTools.length - 1;
+          topLeft.add(element);
+          if (element.visible && widget.topPane && topLeftIndex == -1) {
+            topLeftIndex = topLeft.length - 1;
           }
           break;
         case DockSide.topRight:
-          _topRightPaneTools.add(element);
-          if (element.visible &&
-              widget.topPane &&
-              _topRightPaneToolsIndex == -1) {
-            _topRightPaneToolsIndex = _topRightPaneTools.length - 1;
+          topRight.add(element);
+          if (element.visible && widget.topPane && topRightIndex == -1) {
+            topRightIndex = topRight.length - 1;
           }
           break;
         case DockSide.rightTop:
-          _rightTopPaneTools.add(element);
-          if (element.visible &&
-              widget.rightPane &&
-              _rightTopPaneToolsIndex == -1) {
-            _rightTopPaneToolsIndex = _rightTopPaneTools.length - 1;
+          rightTop.add(element);
+          if (element.visible && widget.rightPane && rightTopIndex == -1) {
+            rightTopIndex = rightTop.length - 1;
           }
           break;
         case DockSide.rightBottom:
-          _rightBottomPaneTools.add(element);
-          if (element.visible &&
-              widget.rightPane &&
-              _rightBottomPaneToolsIndex == -1) {
-            _rightBottomPaneToolsIndex = _rightBottomPaneTools.length - 1;
+          rightBottom.add(element);
+          if (element.visible && widget.rightPane && rightBottomIndex == -1) {
+            rightBottomIndex = rightBottom.length - 1;
           }
           break;
         case DockSide.bottomLeft:
-          _bottomLeftPaneTools.add(element);
-          if (element.visible &&
-              widget.bottomPane &&
-              _bottomLeftPaneToolsIndex == -1) {
-            _bottomLeftPaneToolsIndex = _bottomLeftPaneTools.length - 1;
+          bottomLeft.add(element);
+          if (element.visible && widget.bottomPane && bottomLeftIndex == -1) {
+            bottomLeftIndex = bottomLeft.length - 1;
           }
           break;
         case DockSide.bottomRight:
-          _bottomRightPaneTools.add(element);
-          if (element.visible &&
-              widget.bottomPane &&
-              _bottomRightPaneToolsIndex == -1) {
-            _bottomRightPaneToolsIndex = _bottomRightPaneTools.length - 1;
+          bottomRight.add(element);
+          if (element.visible && widget.bottomPane && bottomRightIndex == -1) {
+            bottomRightIndex = bottomRight.length - 1;
           }
           break;
       }
     }
+
+    // trying to maintain element visibility
+    _leftTopPaneToolsIndex = _getElementDefault(_leftTopPaneTools, leftTop, _leftTopPaneToolsIndex, leftTopIndex);
+    _leftBottomPaneToolsIndex = _getElementDefault(_leftBottomPaneTools, leftBottom, _leftBottomPaneToolsIndex, leftBottomIndex);
+    _topLeftPaneToolsIndex = _getElementDefault(_topLeftPaneTools, topLeft, _topLeftPaneToolsIndex, topLeftIndex);
+    _topRightPaneToolsIndex = _getElementDefault(_topRightPaneTools, topRight, _topRightPaneToolsIndex, topRightIndex);
+
+    _rightTopPaneToolsIndex = _getElementDefault(_rightTopPaneTools, rightTop, _rightTopPaneToolsIndex, rightTopIndex);
+    _rightBottomPaneToolsIndex = _getElementDefault(_rightBottomPaneTools, rightBottom, _rightBottomPaneToolsIndex, rightBottomIndex);
+    _bottomLeftPaneToolsIndex = _getElementDefault(_bottomLeftPaneTools, bottomLeft, _bottomLeftPaneToolsIndex, bottomLeftIndex);
+    _bottomRightPaneToolsIndex = _getElementDefault(_bottomRightPaneTools, bottomRight, _bottomRightPaneToolsIndex, bottomRightIndex);
+
+    // dump new panels
+    _leftTopPaneTools = leftTop;
+    _leftBottomPaneTools = leftBottom;
+    _topLeftPaneTools = topLeft;
+    _topRightPaneTools = topRight;
+    _rightTopPaneTools = rightTop;
+    _rightBottomPaneTools = rightBottom;
+    _bottomLeftPaneTools = bottomLeft;
+    _bottomRightPaneTools = bottomRight;
+
+  }
+
+  int _getElementDefault(List<DockElement> oldList, List<DockElement> newList, int oldIndex, int newIndex) {
+    int toReturn = newIndex;
+    if (oldIndex != -1) {
+      var visibleId = oldList[oldIndex].id;
+      for (int a=0; a<newList.length; a++) {
+        if (newList[a].id == visibleId) {
+          toReturn = a;
+          break;
+        }
+      }
+    }
+    return toReturn;
+  }
+
+  DockSide? _getElementDockSide(DockElement element) {
+
+    // left pane
+    for (var ele in _leftTopPaneTools) {
+      if (ele.id == element.id) {
+        return DockSide.leftTop;
+      }
+    }
+    for (var ele in _leftBottomPaneTools) {
+      if (ele.id == element.id) {
+        return DockSide.leftBottom;
+      }
+    }
+
+    // top pane
+    for (var ele in _topLeftPaneTools) {
+      if (ele.id == element.id) {
+        return DockSide.topLeft;
+      }
+    }
+    for (var ele in _topRightPaneTools) {
+      if (ele.id == element.id) {
+        return DockSide.topRight;
+      }
+    }
+
+    // right pane
+    for (var ele in _rightTopPaneTools) {
+      if (ele.id == element.id) {
+        return DockSide.rightTop;
+      }
+    }
+    for (var ele in _rightBottomPaneTools) {
+      if (ele.id == element.id) {
+        return DockSide.rightBottom;
+      }
+    }
+
+    // bottom pane
+    for (var ele in _bottomLeftPaneTools) {
+      if (ele.id == element.id) {
+        return DockSide.bottomLeft;
+      }
+    }
+    for (var ele in _bottomRightPaneTools) {
+      if (ele.id == element.id) {
+        return DockSide.bottomRight;
+      }
+    }
+
+    return null;
   }
 
   @override
@@ -578,6 +836,7 @@ class DockLayoutState extends State<DockLayout> {
                       );
                     },
                     onAcceptWithDetails: (details) {
+                      print('accepting: ${details.data}');
                       _clearPaneDragOpacity();
 
                       Offset globalPosition =
@@ -618,6 +877,7 @@ class DockLayoutState extends State<DockLayout> {
                         }
                       }
 
+                      print('docking in $side');
                       if (side != null) {
                         _dockPane(details.data, side);
                         //print('dock pane ${details.data} to side $side');
@@ -1054,7 +1314,7 @@ class DockLayoutState extends State<DockLayout> {
     );
   }
 
-  // get all buttons associated to side
+  /// get all buttons associated to side
   List<Widget> _getSideElements(DockSide side, double size) {
     List<Widget> toReturn = [];
 
@@ -1110,7 +1370,7 @@ class DockLayoutState extends State<DockLayout> {
     return toReturn;
   }
 
-  // compose toolbar
+  /// compose toolbar
   Widget? _getToolbar(DockToolbar toolbarDef, Axis axis) {
     List<Widget> widgets = [];
 
@@ -1171,7 +1431,7 @@ class DockLayoutState extends State<DockLayout> {
     }
   }
 
-  // bring to front element
+  /// bring to front element
   void _presentElement(DockElement element) {
     for (int a = 0; a < _leftTopPaneTools.length; a++) {
       if (_leftTopPaneTools[a] == element) {
@@ -1262,5 +1522,36 @@ class DockLayoutState extends State<DockLayout> {
     }
 
     setState(() {});
+  }
+
+  /// get actual encoded layout params in string format.
+  /// Persist this data to use in initial restore
+  String get persistentState {
+    return jsonEncode({
+      'leftSize': _leftPaneSize,
+      'leftTopSize': _leftTopPaneSize,
+      'topSize': _topPaneSize,
+      'topLeftSize': _topLeftPaneSize,
+      'rightSize': _rightPaneSize,
+      'rightTopSize': _rightTopPaneSize,
+      'bottomSize': _bottomPaneSize,
+      'bottomLeftSize': _bottomLeftPaneSize,
+      'leftTopPane': _leftTopPaneTools.map((e) => e.id,).toList(),
+      'leftBottomPane': _leftBottomPaneTools.map((e) => e.id,).toList(),
+      'topLeftPane': _topLeftPaneTools.map((e) => e.id,).toList(),
+      'topRightPane': _topRightPaneTools.map((e) => e.id,).toList(),
+      'rightTopPane': _rightTopPaneTools.map((e) => e.id,).toList(),
+      'rightBottomPane': _rightBottomPaneTools.map((e) => e.id,).toList(),
+      'bottomLeftPane': _bottomLeftPaneTools.map((e) => e.id,).toList(),
+      'bottomRightPane': _bottomRightPaneTools.map((e) => e.id,).toList(),
+      'leftTopPaneIndex': _leftTopPaneToolsIndex,
+      'leftBottomPaneIndex': _leftBottomPaneToolsIndex,
+      'topLeftPaneIndex': _topLeftPaneToolsIndex,
+      'topRightPaneIndex': _topRightPaneToolsIndex,
+      'rightTopPaneIndex': _rightTopPaneToolsIndex,
+      'rightBottomPaneIndex': _rightBottomPaneToolsIndex,
+      'bottomLeftPaneIndex': _bottomLeftPaneToolsIndex,
+      'bottomRightPaneIndex': _bottomRightPaneToolsIndex,
+    });
   }
 }

@@ -3,6 +3,10 @@ import 'package:flutter/widgets.dart';
 
 /// Dock element represents a dockable widget
 class DockElement {
+
+  /// unique identifier
+  final String id;
+
   /// element name.
   final String name;
 
@@ -20,6 +24,7 @@ class DockElement {
 
   /// default constructor.
   const DockElement({
+    required this.id,
     required this.name,
     this.preferredDockSide = DockSide.leftTop,
     required this.widget,

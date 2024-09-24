@@ -101,21 +101,6 @@ class TabbedLayoutState extends State<TabbedLayout> {
       ],
     );
 
-    /*return DefaultTabController(
-      length: _container.documents.length,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          TabBar(
-            tabs: _container.documents.map((e) => Tab(icon: e.icon, text: e.name,),).toList(growable: false),
-            isScrollable: true,
-          ),
-          Expanded(child: TabBarView(
-            children: _container.documents.map((e) => e.widgetBuilder!=null?e.widgetBuilder!(context):Container(),).toList(growable: false)
-          ))
-        ],
-      )
-    );*/
   }
 
   /// get [TabbedLayoutContainer] container
