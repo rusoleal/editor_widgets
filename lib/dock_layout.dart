@@ -1208,39 +1208,40 @@ class DockLayoutState extends State<DockLayout> {
             Row(
               children: [
                 Expanded(
-                    child: Draggable(
-                  data: pane,
-                  dragAnchorStrategy: (draggable, context, position) =>
-                      const Offset(80, 20),
-                  feedback: Material(
-                    color: Colors.transparent,
-                    child: Opacity(
-                      opacity: 0.5,
-                      child: Container(
-                        width: 160,
-                        height: 160,
-                        decoration: BoxDecoration(
-                            color: Colors.grey.shade300,
-                            border: Border.all(color: Colors.grey.shade500)),
-                        child: Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: Text(pane.name,
-                              style: TextStyle(
-                                  color: Colors.grey.shade700, fontSize: 14)),
+                  child: Draggable<DockElement>(
+                    data: pane,
+                    dragAnchorStrategy: (draggable, context, position) =>
+                        const Offset(80, 20),
+                    feedback: Material(
+                      color: Colors.transparent,
+                      child: Opacity(
+                        opacity: 0.5,
+                        child: Container(
+                          width: 160,
+                          height: 160,
+                          decoration: BoxDecoration(
+                              color: Colors.grey.shade300,
+                              border: Border.all(color: Colors.grey.shade500)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Text(pane.name,
+                                style: TextStyle(
+                                    color: Colors.grey.shade700, fontSize: 14)),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      pane.name,
-                      style: TextStyle(color: Colors.grey.shade700),
-                      overflow: TextOverflow.clip,
-                      maxLines: 1,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        pane.name,
+                        style: TextStyle(color: Colors.grey.shade700),
+                        overflow: TextOverflow.clip,
+                        maxLines: 1,
+                      ),
                     ),
-                  ),
-                )),
+                  )
+                ),
                 AnimatedOpacity(
                   opacity: _paneOpacityButtons[pane] ?? 0.0,
                   duration: const Duration(milliseconds: 250),
@@ -1360,11 +1361,35 @@ class DockLayoutState extends State<DockLayout> {
           child: AspectRatio(aspectRatio: 1, child: FlutterLogo()),
         );
       }
-      toReturn.add(InkWell(
-          onTap: () {
-            _presentElement(tool);
-          },
-          child: Tooltip(message: tool.name, child: w)));
+      toReturn.add(Draggable<DockElement>(
+        data: tool,
+        dragAnchorStrategy: (draggable, context, position) =>
+        const Offset(80, 20),
+        feedback: Material(
+          color: Colors.transparent,
+          child: Opacity(
+            opacity: 0.5,
+            child: Container(
+              width: 160,
+              height: 160,
+              decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  border: Border.all(color: Colors.grey.shade500)),
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Text(tool.name,
+                    style: TextStyle(
+                        color: Colors.grey.shade700, fontSize: 14)),
+              ),
+            ),
+          ),
+        ),
+        child: InkWell(
+            onTap: () {
+              _presentElement(tool);
+            },
+            child: Tooltip(message: tool.name, child: w)),
+      ));
     }
 
     return toReturn;
