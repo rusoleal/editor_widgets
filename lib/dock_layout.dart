@@ -1308,7 +1308,7 @@ class DockLayoutState extends State<DockLayout> {
                 ),
               ],
             ),
-            Expanded(child: pane.widget),
+            Expanded(child: pane.widgetBuilder(context)),
           ],
         ),
       ),

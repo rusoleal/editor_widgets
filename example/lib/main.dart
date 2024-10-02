@@ -52,11 +52,11 @@ class _MyHomePageState extends State<MyHomePage> {
       rightPaneToolbar: const DockToolbar(
           part1: [DockSide.topRight, DockSide.rightTop],
           part2: [DockSide.rightBottom, DockSide.bottomRight]),
-      elements: const [
+      elements: [
         DockElement(
           id:'Explorer',
           name: 'Explorer',
-          widget: Center(
+          widgetBuilder: (context) => Center(
             child: Text('Explorer'),
           ),
           icon: Icon(
@@ -68,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
         DockElement(
           id: 'Messages',
           name: 'Messages',
-          widget: Center(
+          widgetBuilder: (context) => Center(
             child: Text('Messages'),
           ),
           preferredDockSide: DockSide.rightTop,
@@ -76,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
         DockElement(
           id: 'Info',
           name: 'Info',
-          widget: Center(
+          widgetBuilder: (context) => Center(
             child: Text('Info'),
           ),
           preferredDockSide: DockSide.bottomLeft,

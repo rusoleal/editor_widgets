@@ -14,7 +14,7 @@ class DockElement {
   final DockSide preferredDockSide;
 
   /// widget element.
-  final Widget widget;
+  final Widget Function(BuildContext context) widgetBuilder;
 
   /// widget used to represent icon in toolbar.
   final Widget? icon;
@@ -27,7 +27,7 @@ class DockElement {
     required this.id,
     required this.name,
     this.preferredDockSide = DockSide.leftTop,
-    required this.widget,
+    required this.widgetBuilder,
     this.icon,
     this.visible = false,
   });
