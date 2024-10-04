@@ -141,13 +141,13 @@ class DockLayoutState extends State<DockLayout> {
     }
   }
 
-  /*@override
+  @override
   void didUpdateWidget(covariant DockLayout oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     print('DockLayoutState.didUpdateWidget');
     _updatePanes();
-  }*/
+  }
 
   /// restore pane from persistentData
   void _restorePanes(String data) {
@@ -463,6 +463,7 @@ class DockLayoutState extends State<DockLayout> {
 
   @override
   Widget build(BuildContext context) {
+    print('DockLayout.build');
     return LayoutBuilder(builder: (context, constraints) {
       // update semi pane sizes
       if (_leftTopPaneSize == null) {
