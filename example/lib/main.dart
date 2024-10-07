@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:editor_widgets/tabbed_document.dart';
 import 'package:flutter/material.dart';
 import 'package:editor_widgets/dock_element.dart';
@@ -39,6 +41,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   late DockLayout _dock;
   final GlobalKey<TabbedLayoutState> _tabbedLayoutKey = GlobalKey();
+  Random _rnd = Random();
 
   @override
   void initState() {
@@ -106,9 +109,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   InkWell(
                     onTap: () {
                       if (_tabbedLayoutKey.currentState != null) {
+                        String randomName = '${getRandomString(10)}.txt';
                         _tabbedLayoutKey.currentState!.container
                             .addDocument(TabbedDocument(
-                          name: 'name',
+                          id: randomName,
+                          name: randomName,
                           icon: const Icon(Icons.file_copy),
                           widgetBuilder: (context) {
                             return TextFormField(
@@ -147,5 +152,11 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
     );
+  }
+
+  String getRandomString(int length) {
+    const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+    return String.fromCharCodes(Iterable.generate(
+        length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
   }
 }

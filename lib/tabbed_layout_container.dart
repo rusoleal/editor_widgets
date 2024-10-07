@@ -11,8 +11,11 @@ class TabbedLayoutContainer {
   /// onRefresh event called when ui refresh needed
   void Function(UnmodifiableListView<TabbedDocument> documents)? onRefresh;
 
+  /// onSelectedDocument event called when selected document changed.
+  void Function(TabbedDocument? document)? onSelectedDocument;
+
   /// default constructor
-  TabbedLayoutContainer({List<TabbedDocument>? documents, this.onRefresh})
+  TabbedLayoutContainer({List<TabbedDocument>? documents, this.onRefresh, this.onSelectedDocument})
       : _documents = documents ?? [],
         _activeDocument = documents != null ? (documents.isEmpty ? -1 : 0) : -1;
 
@@ -22,10 +25,44 @@ class TabbedLayoutContainer {
 
   /// add a document to the end of the list and set it as active document.
   void addDocument(TabbedDocument document) {
-    _documents.add(document);
-    _activeDocument = _documents.length - 1;
-    if (onRefresh != null) {
-      onRefresh!(documents);
+    int index = _documents.indexOf(document);
+    if (index==-1) {
+      _documents.add(document);
+      _activeDocument = _documents.length - 1;
+      if (onRefresh != null) {
+        onRefresh!(documents);
+      }
+      if (onSelectedDocument != null) {
+        onSelectedDocument!(activeDocument);
+      }
+    } else {
+      _activeDocument = index;
+      if (onSelectedDocument != null) {
+        onSelectedDocument!(activeDocument);
+      }
+    }
+
+  }
+
+  void removeDocument(TabbedDocument document) {
+    int index = _documents.indexOf(document);
+    if (index != -1) {
+      _documents.remove(document);
+      if (index <= _activeDocument) {
+        _activeDocument--;
+        if (_activeDocument<0) {
+          _activeDocument = 0;
+        }
+        if (_documents.isEmpty) {
+          _activeDocument = -1;
+        }
+      }
+      if (onRefresh != null) {
+        onRefresh!(documents);
+      }
+      if (onSelectedDocument != null) {
+        onSelectedDocument!(activeDocument);
+      }
     }
   }
 
@@ -35,6 +72,9 @@ class TabbedLayoutContainer {
     _activeDocument = -1;
     if (onRefresh != null) {
       onRefresh!(documents);
+    }
+    if (onSelectedDocument != null) {
+      onSelectedDocument!(activeDocument);
     }
   }
 
@@ -49,6 +89,9 @@ class TabbedLayoutContainer {
       _activeDocument = index;
       if (onRefresh != null) {
         onRefresh!(documents);
+      }
+      if (onSelectedDocument != null) {
+        onSelectedDocument!(activeDocument);
       }
     }
   }
@@ -69,8 +112,48 @@ class TabbedLayoutContainer {
         if (onRefresh != null) {
           onRefresh!(documents);
         }
+        if (onSelectedDocument != null) {
+          onSelectedDocument!(activeDocument);
+        }
         break;
       }
     }
   }
+
+  /// go to next document
+  void nextDocument() {
+    if (_activeDocument == -1) {
+      return;
+    }
+
+    _activeDocument++;
+    if (_activeDocument>=_documents.length) {
+      _activeDocument = 0;
+    }
+    if (onRefresh != null) {
+      onRefresh!(documents);
+    }
+    if (onSelectedDocument != null) {
+      onSelectedDocument!(activeDocument);
+    }
+  }
+
+  /// go to next document
+  void priorDocument() {
+    if (_activeDocument == -1) {
+      return;
+    }
+
+    _activeDocument--;
+    if (_activeDocument < 0) {
+      _activeDocument = _documents.length-1;
+    }
+    if (onRefresh != null) {
+      onRefresh!(documents);
+    }
+    if (onSelectedDocument != null) {
+      onSelectedDocument!(activeDocument);
+    }
+  }
+
 }
