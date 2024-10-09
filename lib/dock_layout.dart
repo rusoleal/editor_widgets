@@ -1206,108 +1206,111 @@ class DockLayoutState extends State<DockLayout> {
         }),
         child: Column(
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Draggable<DockElement>(
-                    data: pane,
-                    dragAnchorStrategy: (draggable, context, position) =>
-                        const Offset(80, 20),
-                    feedback: Material(
-                      color: Colors.transparent,
-                      child: Opacity(
-                        opacity: 0.5,
-                        child: Container(
-                          width: 160,
-                          height: 160,
-                          decoration: BoxDecoration(
-                              color: Colors.grey.shade300,
-                              border: Border.all(color: Colors.grey.shade500)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Text(pane.name,
-                                style: TextStyle(
-                                    color: Colors.grey.shade700, fontSize: 14)),
-                          ),
-                        ),
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        pane.name,
-                        style: TextStyle(color: Colors.grey.shade700),
-                        overflow: TextOverflow.clip,
-                        maxLines: 1,
-                      ),
-                    ),
-                  )
-                ),
-                AnimatedOpacity(
-                  opacity: _paneOpacityButtons[pane] ?? 0.0,
-                  duration: const Duration(milliseconds: 250),
-                  curve: Curves.easeInCubic,
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 4.0),
-                        child: InkWell(
-                          onTap: () {},
-                          child: Padding(
-                            padding: const EdgeInsets.all(1.0),
-                            child: Icon(
-                              Icons.more_vert,
-                              color: Colors.grey.shade400,
-                              size: 16,
+            SizedBox(
+              height: 40,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Draggable<DockElement>(
+                      data: pane,
+                      dragAnchorStrategy: (draggable, context, position) =>
+                          const Offset(80, 20),
+                      feedback: Material(
+                        color: Colors.transparent,
+                        child: Opacity(
+                          opacity: 0.5,
+                          child: Container(
+                            width: 160,
+                            height: 160,
+                            decoration: BoxDecoration(
+                                color: Colors.grey.shade300,
+                                border: Border.all(color: Colors.grey.shade500)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Text(pane.name,
+                                  style: TextStyle(
+                                      color: Colors.grey.shade700, fontSize: 14)),
                             ),
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 4.0),
-                        child: InkWell(
-                          onTap: () {
-                            switch (side) {
-                              case DockSide.leftTop:
-                                _leftTopPaneToolsIndex = -1;
-                                break;
-                              case DockSide.leftBottom:
-                                _leftBottomPaneToolsIndex = -1;
-                                break;
-                              case DockSide.topLeft:
-                                _topLeftPaneToolsIndex = -1;
-                                break;
-                              case DockSide.topRight:
-                                _topRightPaneToolsIndex = -1;
-                                break;
-                              case DockSide.rightTop:
-                                _rightTopPaneToolsIndex = -1;
-                                break;
-                              case DockSide.rightBottom:
-                                _rightBottomPaneToolsIndex = -1;
-                                break;
-                              case DockSide.bottomLeft:
-                                _bottomLeftPaneToolsIndex = -1;
-                                break;
-                              case DockSide.bottomRight:
-                                _bottomRightPaneToolsIndex = -1;
-                                break;
-                            }
-                            setState(() {});
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(1.0),
-                            child: Icon(
-                              Icons.remove,
-                              color: Colors.grey.shade400,
-                            ),
-                          ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          pane.name,
+                          style: TextStyle(color: Colors.grey.shade700),
+                          overflow: TextOverflow.clip,
+                          maxLines: 1,
                         ),
-                      )
-                    ],
+                      ),
+                    )
                   ),
-                ),
-              ],
+                  AnimatedOpacity(
+                    opacity: _paneOpacityButtons[pane] ?? 0.0,
+                    duration: const Duration(milliseconds: 250),
+                    curve: Curves.easeInCubic,
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 4.0),
+                          child: InkWell(
+                            onTap: () {},
+                            child: Padding(
+                              padding: const EdgeInsets.all(1.0),
+                              child: Icon(
+                                Icons.more_vert,
+                                color: Colors.grey.shade400,
+                                size: 16,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 4.0),
+                          child: InkWell(
+                            onTap: () {
+                              switch (side) {
+                                case DockSide.leftTop:
+                                  _leftTopPaneToolsIndex = -1;
+                                  break;
+                                case DockSide.leftBottom:
+                                  _leftBottomPaneToolsIndex = -1;
+                                  break;
+                                case DockSide.topLeft:
+                                  _topLeftPaneToolsIndex = -1;
+                                  break;
+                                case DockSide.topRight:
+                                  _topRightPaneToolsIndex = -1;
+                                  break;
+                                case DockSide.rightTop:
+                                  _rightTopPaneToolsIndex = -1;
+                                  break;
+                                case DockSide.rightBottom:
+                                  _rightBottomPaneToolsIndex = -1;
+                                  break;
+                                case DockSide.bottomLeft:
+                                  _bottomLeftPaneToolsIndex = -1;
+                                  break;
+                                case DockSide.bottomRight:
+                                  _bottomRightPaneToolsIndex = -1;
+                                  break;
+                              }
+                              setState(() {});
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(1.0),
+                              child: Icon(
+                                Icons.remove,
+                                color: Colors.grey.shade400,
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
             Expanded(child: pane.widgetBuilder(context)),
           ],

@@ -59,8 +59,15 @@ class _MyHomePageState extends State<MyHomePage> {
         DockElement(
           id:'Explorer',
           name: 'Explorer',
-          widgetBuilder: (context) => Center(
-            child: Text('Explorer'),
+          widgetBuilder: (context) => Container(
+            decoration: BoxDecoration(border: Border(top: BorderSide(color: Colors.grey.shade300))),
+            child: Column(
+              children: [
+                Center(
+                  child: Text('Explorer'),
+                ),
+              ],
+            ),
           ),
           icon: Icon(
             Icons.folder_outlined,
