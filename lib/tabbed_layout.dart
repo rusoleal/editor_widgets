@@ -45,9 +45,10 @@ class TabbedLayoutState extends State<TabbedLayout> {
     Widget content = Container();
     if (_container.activeDocument != null &&
         _container.activeDocument!.widgetBuilder != null) {
+      _container.activeDocument!.lastBuiltWidget = _container.activeDocument!.widgetBuilder!(context);
       content = Container(
           key: ObjectKey(_container.activeDocument),
-          child: _container.activeDocument!.widgetBuilder!(context));
+          child: _container.activeDocument!.lastBuiltWidget);
     }
 
     return Shortcuts(
@@ -116,7 +117,10 @@ class TabbedLayoutState extends State<TabbedLayout> {
                                       ),
                                       Text(element.name),
                                       InkWell(
-                                        onTap: () {
+                                        onTap: () async {
+                                          if (element.onSave != null) {
+                                            await element.onSave!(element.lastBuiltWidget);
+                                          }
                                           _container.removeDocument(element);
                                         },
                                         child: Padding(
@@ -167,7 +171,7 @@ class TabbedLayoutState extends State<TabbedLayout> {
       print('selected renderbox: ${position}');
       //_tabScrollController.jumpTo(rb.paintBounds.left);
     } else {
-      print('Trying to calculate tab position but not exists yet.');
+      print('Trying to calculate tab position but don\'t exists yet.');
     }
     setState(() {});
   }

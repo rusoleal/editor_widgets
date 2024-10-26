@@ -156,4 +156,16 @@ class TabbedLayoutContainer {
     }
   }
 
+  /// call onSave event for all open tabs
+  Future<void> save() async {
+
+    List<Future> futures = [];
+
+    for (var document in _documents) {
+      if (document.onSave != null) {
+        futures.add(document.onSave!(document.lastBuiltWidget));
+      }
+    }
+    await Future.wait(futures);
+  }
 }
