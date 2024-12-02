@@ -8,8 +8,11 @@ import 'package:flutter/services.dart';
 
 /// Tab layout widget
 class TabbedLayout extends StatefulWidget {
+
+  final void Function(TabbedDocument? document)? onSelectedDocument;
+
   /// default constructor
-  const TabbedLayout({super.key});
+  const TabbedLayout({super.key, this.onSelectedDocument});
 
   @override
   State<StatefulWidget> createState() {
@@ -160,6 +163,11 @@ class TabbedLayoutState extends State<TabbedLayout> {
   }
 
   void _selectedDocumentEvent(TabbedDocument? document) {
+
+    if (widget.onSelectedDocument != null) {
+      widget.onSelectedDocument!(document);
+    }
+
     if (document == null) {
       return;
     }
