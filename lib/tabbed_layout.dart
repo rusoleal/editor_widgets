@@ -77,78 +77,75 @@ class TabbedLayoutState extends State<TabbedLayout> {
             _container.priorDocument();
           },),
         },
-        child: Focus(
-          autofocus: true,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                    border: Border(bottom: BorderSide(color: Colors.grey.shade300))),
-                child: SizedBox(
-                  height: 40,
-                  child: ListView(
-                    key: _tabScrollKey,
-                    controller: _tabScrollController,
-                    scrollDirection: Axis.horizontal,
-                    children: _container.documents
-                        .map(
-                          (element) => Container(
-                            key: element.key,
-                            decoration: BoxDecoration(
-                                border: Border(
-                                    bottom: BorderSide(
-                                        color: element == _container.activeDocument
-                                            ? Colors.grey.shade400
-                                            : Colors.transparent,
-                                        width: 4))),
-                            child: Material(
-                              child: InkWell(
-                                onTap: () {
-                                  _container.activeDocument = element;
-                                  setState(() {});
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                                  child: Row(
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: FittedBox(
-                                          child: element.icon ?? const FlutterLogo(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                  border: Border(bottom: BorderSide(color: Colors.grey.shade300))),
+              child: SizedBox(
+                height: 40,
+                child: ListView(
+                  key: _tabScrollKey,
+                  controller: _tabScrollController,
+                  scrollDirection: Axis.horizontal,
+                  children: _container.documents
+                      .map(
+                        (element) => Container(
+                          key: element.key,
+                          decoration: BoxDecoration(
+                              border: Border(
+                                  bottom: BorderSide(
+                                      color: element == _container.activeDocument
+                                          ? Colors.grey.shade400
+                                          : Colors.transparent,
+                                      width: 4))),
+                          child: Material(
+                            child: InkWell(
+                              onTap: () {
+                                _container.activeDocument = element;
+                                setState(() {});
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: FittedBox(
+                                        child: element.icon ?? const FlutterLogo(),
+                                      ),
+                                    ),
+                                    Text(element.name),
+                                    InkWell(
+                                      onTap: () async {
+                                        if (element.onSave != null) {
+                                          await element.onSave!(element.lastBuiltWidget);
+                                        }
+                                        _container.removeDocument(element);
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(left: 6.0),
+                                        child: Icon(
+                                          Icons.close,
+                                          size: 13,
+                                          color: Colors.grey.shade400,
                                         ),
                                       ),
-                                      Text(element.name),
-                                      InkWell(
-                                        onTap: () async {
-                                          if (element.onSave != null) {
-                                            await element.onSave!(element.lastBuiltWidget);
-                                          }
-                                          _container.removeDocument(element);
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(left: 6.0),
-                                          child: Icon(
-                                            Icons.close,
-                                            size: 13,
-                                            color: Colors.grey.shade400,
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
+                                    )
+                                  ],
                                 ),
                               ),
                             ),
                           ),
-                        )
-                        .toList(),
-                  ),
+                        ),
+                      )
+                      .toList(),
                 ),
               ),
-              Expanded(child: content)
-            ],
-          ),
+            ),
+            Expanded(child: content)
+          ],
         ),
       ),
     );
